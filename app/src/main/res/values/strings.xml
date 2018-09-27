@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MovieSearcher</string>
+    <string name="app_name">Movie Searcher</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_book_detail">BookDetailActivity</string>
     <string name="search_button">Search</string>

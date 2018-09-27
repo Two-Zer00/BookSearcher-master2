@@ -77,7 +77,6 @@ public class Book implements Serializable{
             book.title = jsonObject.getString("title");
             book.overview = jsonObject.getString("overview");
             book.voteAvs= jsonObject.getString("vote_average");
-            book.voteAvs= jsonObject.getString("popularity");
             book.releaseDate=jsonObject.getString("release_date");
             // Deserialize json into object fields
             // Check if a cover edition is available

@@ -172,7 +172,7 @@ public class BookListActivity extends AppCompatActivity {
     }
     private void UpComingMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
-        BookListActivity.this.setTitle("Popular Movies");
+        BookListActivity.this.setTitle("Upcoming Movies");
         client = new BookClient();
         client.getUpcomingMovies(new JsonHttpResponseHandler() {
             @Override
@@ -213,7 +213,7 @@ public class BookListActivity extends AppCompatActivity {
     }
     private void NowPlayingMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
-        BookListActivity.this.setTitle("Popular Movies");
+        BookListActivity.this.setTitle("Now playing movies");
         client = new BookClient();
         client.getNowPlayingMovies(new JsonHttpResponseHandler() {
             @Override
