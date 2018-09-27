@@ -1,12 +1,27 @@
 package com.example.twozer00.booksearch.booksearch;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.twozer00.booksearch.booksearch.adapters.MovieRecomendationAdapter;
@@ -33,12 +49,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class BookDetailActivity extends AppCompatActivity {
     private ImageView ivBookCover;
+    //private ImageView bgImage;
     private ImageView MovieActor;
     /*private ImageView ivMovieCoverR;
     private ImageView ivCompaniesLogo;
@@ -61,8 +84,9 @@ public class BookDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_detail);
+        setContentView(R.layout.content_scrolling);
         ivBookCover = (ImageView) findViewById(R.id.ivBookCover);
+        //bgImage = (ImageView) findViewById(R.id.imagebg);
         //ivMovieCoverR = (ImageView) findViewById(R.id.ivMovieCoverR);
         //ivCompaniesLogo = (ImageView) findViewById(R.id.ivCompaniesLogo);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -95,7 +119,6 @@ public class BookDetailActivity extends AppCompatActivity {
         Rate.setText((book.getVote()));
         release_date.setText("Release date: "+book.getRelease_date());
         tvOverview.setText(book.getOverview());
-        //tvGenre.setText(book.getGenre());
         // fetch extra book data from books API
         client = new BookClient();
         Log.d("onSucess",book.getId_Movie());
@@ -201,52 +224,98 @@ public class BookDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_share) {
-            setShareIntent();
+            //shareImage();
+            return true;
+        }if(id==R.id.action_downloadimage){
+            if(Permissions()){
+                saveImage(ivBookCover);
+            }
+            else{
+                Toast.makeText(this,"You have permission denied",Toast.LENGTH_LONG);
+            }
+            //saveImage(ivBookCover);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+public boolean Permissions(){
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
+            return true;
+        }
+        if((checkSelfPermission(WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED)
+                &&(checkSelfPermission(READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED)){
+            return true;
+        }
+        if(shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)
+                ||(shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE))){
+            loadDialogInformation();
+        }
+        else {
 
-    private void setShareIntent() {
-        ImageView ivImage = (ImageView) findViewById(R.id.ivBookCover);
-        final TextView tvTitle = (TextView)findViewById(R.id.tvTitle);
-        // Get access to the URI for the bitmap
-        Uri bmpUri = getLocalBitmapUri(ivImage);
-        // Construct a ShareIntent with link to image
-        Intent shareIntent = new Intent();
-        // Construct a ShareIntent with link to image
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.setType("*/*");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, (String)tvTitle.getText());
-        shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-        // Launch share menu
-        startActivity(Intent.createChooser(shareIntent, "Share Image"));
+            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE},100);
+        }
+return false;
+}
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if(grantResults.length == 2
+                    && grantResults[0]==PackageManager.PERMISSION_GRANTED
+                    && grantResults[1]==PackageManager.PERMISSION_GRANTED){
+                saveImage(ivBookCover);
+            }
+            else{
+                AllowPermissionsManually();
+            }
+        }
+        }
+
+    private void AllowPermissionsManually() {
+        AlertDialog.Builder dialog= new AlertDialog.Builder(BookDetailActivity.this);
+        dialog.setTitle("Unable permissions");
+        dialog.setMessage("You must accept the permission for the correctly working of the app");
+        dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE},100);
+            }
+        });
+        dialog.show();
     }
 
-    // Returns the URI path to the Bitmap displayed in cover imageview
-    public Uri getLocalBitmapUri(ImageView imageView) {
-        // Extract Bitmap from ImageView drawable
-        Drawable drawable = imageView.getDrawable();
-        Bitmap bmp = null;
-        if (drawable instanceof BitmapDrawable){
-            bmp = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        } else {
-            return null;
-        }
-        // Store image to default external storage directory
-        Uri bmpUri = null;
-        try {
-            File file =  new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
-            file.getParentFile().mkdirs();
-            FileOutputStream out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
-            out.close();
-            bmpUri = Uri.fromFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bmpUri;
+
+    private void loadDialogInformation() {
+        final CharSequence[] options={"yes","no"};
+        final AlertDialog.Builder alertOpcion= new AlertDialog.Builder(BookDetailActivity.this);
+        alertOpcion.setTitle("You want configurated manually permissions");
+        alertOpcion.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (options[i].equals("yes")){
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri=Uri.fromParts("package",getPackageName(),null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"The permission wasn't allow", Toast.LENGTH_LONG).show();
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        alertOpcion.show();
+    }
+
+    public void saveImage(ImageView imageView) {
+        //convertir imagen
+        imageView.buildDrawingCache();
+        Bitmap bmap = imageView.getDrawingCache();
+
+        //guardar imagen
+        save savefile = new save();
+        savefile.SaveImage(getApplicationContext(), bmap);
     }
 }

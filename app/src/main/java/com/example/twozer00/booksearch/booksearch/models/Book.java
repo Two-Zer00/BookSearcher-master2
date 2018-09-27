@@ -15,10 +15,15 @@ public class Book implements Serializable{
     protected  String id_Movie;
     private String genre;
     protected  String title;
+    protected  String name;
+    protected String personImage;
+    protected String popularity;
+    protected String personMovies;
     private String overview;
     private String voteAvs;
     private String releaseDate;
     protected  String imagecode;
+    protected  String bgimagecode;
     private String profilepath;
     //private String[] profile_path;
 
@@ -47,10 +52,9 @@ public class Book implements Serializable{
     public String getCoverUrl() {
         return "https://image.tmdb.org/t/p/w185/" + imagecode;
     }
-    public String getActorUrl(String[] profile_path) {
-        return "https://image.tmdb.org/t/p/w185/" + profile_path;
+    public String getbgUrl() {
+        return "https://image.tmdb.org/t/p/w185/" + bgimagecode;
     }
-
     // Get large sized book cover from covers API
     public String getLargeCoverUrl() {
         return "https://image.tmdb.org/t/p/w342/" + imagecode;
@@ -59,8 +63,6 @@ public class Book implements Serializable{
     public static Book fromJson(JSONObject jsonObject) {
         Book book = new Book();
         try {
-            // Deserialize json into object fields
-            // Check if a cover edition is available
             book.id_Movie=jsonObject.getString("id");
             if (jsonObject.has("poster_path"))  {
                 book.imagecode = jsonObject.getString("poster_path");
@@ -68,13 +70,17 @@ public class Book implements Serializable{
                 final JSONArray ids = jsonObject.getJSONArray("poster_path");
                 book.imagecode = ids.getString(0);
             }
-            else if(jsonObject.has("profile_path")){
-                book.profilepath=jsonObject.getString("profile_path");
+
+            if(jsonObject.has("backdrop_path")){
+                book.bgimagecode=jsonObject.getString("backdrop_path");
             }
             book.title = jsonObject.getString("title");
             book.overview = jsonObject.getString("overview");
             book.voteAvs= jsonObject.getString("vote_average");
+            book.voteAvs= jsonObject.getString("popularity");
             book.releaseDate=jsonObject.getString("release_date");
+            // Deserialize json into object fields
+            // Check if a cover edition is available
             //book.tvPageCount=jsonObject.getString("release_date");
             //book.genre = getGenre(jsonObject);
             //book.genre = getGenre(jsonObject);
@@ -84,28 +90,6 @@ public class Book implements Serializable{
         }
         // Return new object
         return book;
-    }
-
-    // Return comma separated author list when there is more than one author
-    private static String getGenre(final JSONObject jsonObject) {
-        try {
-            final JSONArray genres = jsonObject.getJSONArray("genres");
-            int numGenres = genres.length();
-
-            final String[] GenresStrings = new String[numGenres];
-            final String[] GenresLocal = new String[numGenres];
-            for (int i=0 ;i<numGenres;++i){
-                GenresLocal[i]=genres.getJSONObject(i).has("genres") ? jsonObject.getString("genres"):"";
-            }
-
-            /*for (int i = 0; i < numGenres; ++i) {
-                authorStrings[i] = genres.getString(i);
-            }*/
-            return TextUtils.join(", ", GenresStrings);
-
-        } catch (JSONException e) {
-            return "";
-        }
     }
     // Decodes array of book json results into business model objects
     public static ArrayList<Book> fromJson(JSONArray jsonArray) {

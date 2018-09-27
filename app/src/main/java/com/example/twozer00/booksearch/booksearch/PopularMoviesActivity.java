@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -37,39 +39,42 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 
 public class PopularMoviesActivity extends AppCompatActivity {
-    private static final String API_URL="https://api.themoviedb.org/3/";
-    private  static  final String API_KEY="?api_key=a36aa66b935c743a91a78e97f0e4bc9c";
-    //public static final String BOOK_DETAIL_KEY;
-    //private ListView lvBooks;
+    public static final String BOOK_DETAIL_KEY = "movie";
+    private ListView lvBooks;
     private ListView PopularMovie;
     //private BookAdapter bookAdapter;
     private PopularMoviesAdapter MovieAdapter;
-    //private RecyclerView recyclerView;
 
 
     private BookClient client;
     private ProgressBar progress;
+    //private Reci
+    //private AsyncHttpClient client1;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popular_movies_activity);
-        PopularMovie = (ListView) findViewById(R.id.PopularMovie);
-        ArrayList<Book> Movie = new ArrayList<Book>();
-        //ArrayList<MovieRecomendation> MovieR=new ArrayList<MovieRecomendation>();
-        MovieAdapter= new PopularMoviesAdapter(this, Movie);
-        //RecyclerView recycleListView=()
-        PopularMovie.setAdapter(MovieAdapter);
+        lvBooks = (ListView) findViewById(R.id.lvMovies);
+        //PopularMovie = (ListView) findViewById(R.id.PopularMovie);
+        ArrayList<Book> aBooks = new ArrayList<Book>();
+        //bookAdapter = new BookAdapter(this, aBooks);
+        MovieAdapter = new PopularMoviesAdapter(this,aBooks);
+        lvBooks.setAdapter(MovieAdapter);
         progress = (ProgressBar) findViewById(R.id.progressBP);
+        Log.d("query",client.PopularMovies());
         PopularMovies();
+        setupBookSelectedListener();
+        //fetchBooks(client.getPopular(new JsonHttpResponseHandler()));
     }
     public void setupBookSelectedListener() {
-        PopularMovie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Launch the detail view passing book as an extra
                 Intent intent = new Intent(PopularMoviesActivity.this, BookDetailActivity.class);
                 //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
-                intent.putExtra(BookListActivity.BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
+                intent.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
                 //intent1.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
                 startActivity(intent);
                 //startActivity(intent1);
@@ -78,6 +83,7 @@ public class PopularMoviesActivity extends AppCompatActivity {
     }
     private void PopularMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
+        PopularMoviesActivity.this.setTitle("Popular Movies");
         client = new BookClient();
         client.getPopularMovies(new JsonHttpResponseHandler() {
             @Override
@@ -116,4 +122,6 @@ public class PopularMoviesActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

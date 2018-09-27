@@ -12,9 +12,9 @@
         android:max="100"
         android:indeterminate="true"
         android:visibility="gone" />
-
     <ListView
-        android:id="@+id/lvBooks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:id="@+id/lvBooks">
+    </ListView>
 </LinearLayout>

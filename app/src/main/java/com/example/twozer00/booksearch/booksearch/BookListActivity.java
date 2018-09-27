@@ -1,12 +1,15 @@
 package com.example.twozer00.booksearch.booksearch;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,18 +38,17 @@ import cz.msebera.android.httpclient.Header;
 
 public class BookListActivity extends AppCompatActivity {
     public static final String BOOK_DETAIL_KEY = "movie";
-    public static final String BOOK_DETAIL_RECOMENDATION_KEY = "recommendations";
+    //public static final String BOOK_DETAIL_RECOMENDATION_KEY = "recommendations";
     //private String popularMovies=BookClient.;
     //private String popular =""
     private ListView lvBooks;
-    private ListView PopularMovie;
+    //private ListView PopularMovie;
     private BookAdapter bookAdapter;
     private PopularMoviesAdapter MovieAdapter;
 
 
     private BookClient client;
     private ProgressBar progress;
-    //private AsyncHttpClient client1;
 
 
     @Override
@@ -57,7 +59,7 @@ public class BookListActivity extends AppCompatActivity {
         //PopularMovie = (ListView) findViewById(R.id.PopularMovie);
         ArrayList<Book> aBooks = new ArrayList<Book>();
         bookAdapter = new BookAdapter(this, aBooks);
-        MovieAdapter = new PopularMoviesAdapter(this,aBooks);
+        //MovieAdapter = new PopularMoviesAdapter(this,aBooks);
         lvBooks.setAdapter(bookAdapter);
         progress = (ProgressBar) findViewById(R.id.progress);
         Log.d("query",client.PopularMovies());
@@ -91,7 +93,6 @@ public class BookListActivity extends AppCompatActivity {
                     Log.d("Ejecutando","Me estoy ejecutando");
                     Toast toast1=Toast.makeText(getBaseContext(),"Has been found: "+response.getString("total_results")+" results",Toast.LENGTH_LONG);
                     //toast1.setGravity(0,0,((Gravity.END)-50));
-
                     progress.setVisibility(ProgressBar.GONE);
                     JSONArray docs = null;
                     if(response != null) {
@@ -105,6 +106,7 @@ public class BookListActivity extends AppCompatActivity {
                         // Load model objects into the adapter
                         for (Book book : books) {
                             bookAdapter.add(book);
+                            //bookAdapter.
                             // add book through the adapter
                         }
                         bookAdapter.notifyDataSetChanged();
@@ -129,7 +131,7 @@ public class BookListActivity extends AppCompatActivity {
 
     private void PopularMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
-        BookListActivity.this.setTitle("PopularMovies");
+        BookListActivity.this.setTitle("Popular Movies");
         client = new BookClient();
         client.getPopularMovies(new JsonHttpResponseHandler() {
             @Override
@@ -147,13 +149,95 @@ public class BookListActivity extends AppCompatActivity {
                         // Parse json array into array of model objects
                         final ArrayList<Book> books = Book.fromJson(docs);
                         // Remove all books from the adapter
-                        MovieAdapter.clear();
+                        bookAdapter.clear();
                         // Load model objects into the adapter
                         for (Book book : books) {
-                            MovieAdapter.add(book);
+                            bookAdapter.add(book);
                             // add book through the adapter
                         }
-                        MovieAdapter.notifyDataSetChanged();
+                        bookAdapter.notifyDataSetChanged();
+                    }
+                    //toast1.show();
+                } catch (JSONException e) {
+                    // Invalid JSON format, show appropriate error.
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                progress.setVisibility(ProgressBar.GONE);
+
+            }
+        });
+    }
+    private void UpComingMovies() {
+        progress.setVisibility(ProgressBar.VISIBLE);
+        BookListActivity.this.setTitle("Popular Movies");
+        client = new BookClient();
+        client.getUpcomingMovies(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Log.d("Ejecutando","Me estoy ejecutando");
+                    Toast toast1=Toast.makeText(getBaseContext(),"Has been found: "+response.getString("total_results")+" results",Toast.LENGTH_LONG);
+                    //toast1.setGravity(0,0,((Gravity.END)-50));
+
+                    progress.setVisibility(ProgressBar.GONE);
+                    JSONArray docs = null;
+                    if(response != null) {
+                        // Get the docs json array
+                        docs = response.getJSONArray("results");
+                        // Parse json array into array of model objects
+                        final ArrayList<Book> books = Book.fromJson(docs);
+                        // Remove all books from the adapter
+                        bookAdapter.clear();
+                        // Load model objects into the adapter
+                        for (Book book : books) {
+                            bookAdapter.add(book);
+                            // add book through the adapter
+                        }
+                        bookAdapter.notifyDataSetChanged();
+                    }
+                    //toast1.show();
+                } catch (JSONException e) {
+                    // Invalid JSON format, show appropriate error.
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                progress.setVisibility(ProgressBar.GONE);
+
+            }
+        });
+    }
+    private void NowPlayingMovies() {
+        progress.setVisibility(ProgressBar.VISIBLE);
+        BookListActivity.this.setTitle("Popular Movies");
+        client = new BookClient();
+        client.getNowPlayingMovies(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Log.d("Ejecutando","Me estoy ejecutando");
+                    Toast toast1=Toast.makeText(getBaseContext(),"Has been found: "+response.getString("total_results")+" results",Toast.LENGTH_LONG);
+                    //toast1.setGravity(0,0,((Gravity.END)-50));
+
+                    progress.setVisibility(ProgressBar.GONE);
+                    JSONArray docs = null;
+                    if(response != null) {
+                        // Get the docs json array
+                        docs = response.getJSONArray("results");
+                        // Parse json array into array of model objects
+                        final ArrayList<Book> books = Book.fromJson(docs);
+                        // Remove all books from the adapter
+                        bookAdapter.clear();
+                        // Load model objects into the adapter
+                        for (Book book : books) {
+                            bookAdapter.add(book);
+                            // add book through the adapter
+                        }
+                        bookAdapter.notifyDataSetChanged();
                     }
                     //toast1.show();
                 } catch (JSONException e) {
@@ -173,7 +257,7 @@ public class BookListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_book_list, menu);
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem searchItem=menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -189,7 +273,6 @@ public class BookListActivity extends AppCompatActivity {
                 BookListActivity.this.setTitle(query);
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
@@ -197,4 +280,71 @@ public class BookListActivity extends AppCompatActivity {
         });
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if(id==R.id.action_options){
+            final CharSequence[] options={"Populars","Upcoming","Now playing"};
+            final AlertDialog.Builder alertOpcion= new AlertDialog.Builder(BookListActivity.this);
+            alertOpcion.setTitle("Choose what movies want so see");
+            alertOpcion.setItems(options, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (options[i].equals("Populars")){
+                        PopularMovies();
+                    }
+                    else if(options[i].equals("Upcoming")){
+                        UpComingMovies();
+
+                    }
+                    else if(options[i].equals("Now playing")){
+                        NowPlayingMovies();
+
+                    }
+
+                    else{
+                        Toast.makeText(getApplicationContext(),"Nothing choose", Toast.LENGTH_LONG).show();
+                        dialogInterface.dismiss();
+                    }
+                }
+            });
+            alertOpcion.show();
+
+
+            return true;
+        }
+        if(id==R.id.action_leng){
+            client = new BookClient();
+            final CharSequence[] options={"Español-MX","English-US"};
+            final AlertDialog.Builder alertOpcion= new AlertDialog.Builder(BookListActivity.this);
+            alertOpcion.setTitle("Select lenguage");
+            alertOpcion.setItems(options, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (options[i].equals("Español-MX")){
+                        client.getLenguage("es-MX");
+                    }
+                    else if(options[i].equals("English-US")){
+                        client.getLenguage("en-US");
+
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),"Nothing choose", Toast.LENGTH_LONG).show();
+                        dialogInterface.dismiss();
+                    }
+                }
+            });
+            alertOpcion.show();
+
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
 }

@@ -10,15 +10,11 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this,BookListActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            },4000);
+        //setContentView(R.layout.activity_splash);
+        //new Handler().postDelayed(new Runnable() {
+        Intent intent = new Intent(this,BookListActivity.class);
+        startActivity(intent);
+        finish();
+           // },4000);
     }
 }
