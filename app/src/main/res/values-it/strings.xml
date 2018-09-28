@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cercatore di filmati</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="title_activity_book_detail">BookDetailActivity</string>
+    <string name="search_button">Ricerca</string>
+    <string name="CompanyName">Azienda</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title">titolo</string>
+    <string name="rate">Vota</string>
+    <string name="duration">Durata</string>
+    <string name="overview">Riepilogo</string>
+    <string name="companies">Aziende</string>
+    <string name="actors">Lanciare</string>
+    <string name="actor">Attore</string>
+    <string name="date">Data di rilascio:</string>
+    <string name="genres">Genere</string>
+    <string name="popular">Popolares</string>
+    <string name="upcoming">imminente</string>
+    <string name="nowplaying">ora giocando</string>
+    <string name="hours">hrs</string>
+    <string name="menu_lenguaje">Lingua</string>
+    <string name="menu_search">ricerca</string>
+    <string name="toast_results">è stato trovato </string>
+    <string name="toast_results1"> resultados</string>
+    <string name="alerDialog">Scegli quello che vuoi vedere</string>
+    <string name="select_lenguage">Seleziona la lingua</string>
+    <string name="nothing_choose">Niente sceglie</string>
+    <string name="noresults">Non ci sono risultati :( riprova: D </string>
+    <string name="image_saved">Immagine salvata</string>
+    <string name="image_nosaved">Non è possibile salvare l\'immagine</string>
+
+</resources>

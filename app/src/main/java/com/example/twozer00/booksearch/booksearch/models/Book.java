@@ -13,27 +13,20 @@ import com.example.twozer00.booksearch.booksearch.net.BookClient;
 
 public class Book implements Serializable{
     protected  String id_Movie;
-    private String genre;
     protected  String title;
-    protected  String name;
-    protected String personImage;
-    protected String popularity;
-    protected String personMovies;
     private String overview;
     private String voteAvs;
     private String releaseDate;
     protected  String imagecode;
     protected  String bgimagecode;
+    public static String mediaType;
     private String profilepath;
     //private String[] profile_path;
-
-    public String getOpenLibraryId() {
-        return imagecode;
-    }
 
     public String getId_Movie() {
         return id_Movie;
     }
+
     public String getRelease_date() {
         return releaseDate;
     }
@@ -78,11 +71,6 @@ public class Book implements Serializable{
             book.overview = jsonObject.getString("overview");
             book.voteAvs= jsonObject.getString("vote_average");
             book.releaseDate=jsonObject.getString("release_date");
-            // Deserialize json into object fields
-            // Check if a cover edition is available
-            //book.tvPageCount=jsonObject.getString("release_date");
-            //book.genre = getGenre(jsonObject);
-            //book.genre = getGenre(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

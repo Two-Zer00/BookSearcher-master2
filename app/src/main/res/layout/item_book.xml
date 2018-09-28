@@ -19,13 +19,21 @@
         android:text="Title"
         android:textSize="24dp" />
     <TextView
+        android:id="@+id/releasedate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/ivBookCover"
+        android:layout_below="@+id/tvTitle"
+        android:text="@string/date"/>
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/release_date"
         android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@id/ivBookCover"
+        android:layout_toRightOf="@id/releasedate"
         android:layout_below="@+id/tvTitle"
-        android:text="release date"/>
+        android:text="release"/>
     <TextView
         android:id="@+id/tvOverview"
         android:layout_width="wrap_content"

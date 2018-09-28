@@ -38,13 +38,45 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:textSize="16sp" />
-
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="20dp"
+                android:gravity="center">
+            <View
+                android:id="@+id/view1"
+                android:layout_width="280dp"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray" />
             <TextView
                 android:id="@+id/tvPageCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:layout_below="@id/view1"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:text="@string/hours"
+                android:layout_toRightOf="@id/tvPageCount"/>
+
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/releasedate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:text="@string/date"/>
 
             <TextView
                 android:id="@+id/release_date"

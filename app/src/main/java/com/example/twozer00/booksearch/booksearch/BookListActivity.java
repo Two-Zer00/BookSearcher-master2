@@ -45,8 +45,6 @@ public class BookListActivity extends AppCompatActivity {
     //private ListView PopularMovie;
     private BookAdapter bookAdapter;
     private PopularMoviesAdapter MovieAdapter;
-
-
     private BookClient client;
     private ProgressBar progress;
 
@@ -91,7 +89,7 @@ public class BookListActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Log.d("Ejecutando","Me estoy ejecutando");
-                    Toast toast1=Toast.makeText(getBaseContext(),"Has been found: "+response.getString("total_results")+" results",Toast.LENGTH_LONG);
+                    Toast toast1=Toast.makeText(getBaseContext(),getResources().getText(R.string.toast_results)+response.getString("total_results")+getResources().getText(R.string.toast_results1),Toast.LENGTH_LONG);
                     //toast1.setGravity(0,0,((Gravity.END)-50));
                     progress.setVisibility(ProgressBar.GONE);
                     JSONArray docs = null;
@@ -112,7 +110,7 @@ public class BookListActivity extends AppCompatActivity {
                         bookAdapter.notifyDataSetChanged();
                         }
                         else{
-                            toast1=Toast.makeText(getBaseContext(),"There's not results :( try again :D",Toast.LENGTH_LONG);
+                            toast1=Toast.makeText(getBaseContext(),getResources().getText(R.string.noresults),Toast.LENGTH_LONG);
                             toast1.show();
                         }
                     }
@@ -131,14 +129,14 @@ public class BookListActivity extends AppCompatActivity {
 
     private void PopularMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
-        BookListActivity.this.setTitle("Popular Movies");
+        BookListActivity.this.setTitle(getResources().getText(R.string.popular));
         client = new BookClient();
         client.getPopularMovies(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Log.d("Ejecutando","Me estoy ejecutando");
-                    Toast toast1=Toast.makeText(getBaseContext(),"Has been found: "+response.getString("total_results")+" results",Toast.LENGTH_LONG);
+                    Toast toast1=Toast.makeText(getBaseContext(),getResources().getText(R.string.toast_results)+response.getString("total_results")+getResources().getText(R.string.toast_results1),Toast.LENGTH_LONG);
                     //toast1.setGravity(0,0,((Gravity.END)-50));
 
                     progress.setVisibility(ProgressBar.GONE);
@@ -172,14 +170,14 @@ public class BookListActivity extends AppCompatActivity {
     }
     private void UpComingMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
-        BookListActivity.this.setTitle("Upcoming Movies");
+        BookListActivity.this.setTitle(getResources().getText(R.string.upcoming));
         client = new BookClient();
         client.getUpcomingMovies(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Log.d("Ejecutando","Me estoy ejecutando");
-                    Toast toast1=Toast.makeText(getBaseContext(),"Has been found: "+response.getString("total_results")+" results",Toast.LENGTH_LONG);
+                    Toast toast1=Toast.makeText(getBaseContext(),getResources().getText(R.string.toast_results)+response.getString("total_results")+" results",Toast.LENGTH_LONG);
                     //toast1.setGravity(0,0,((Gravity.END)-50));
 
                     progress.setVisibility(ProgressBar.GONE);
@@ -213,14 +211,14 @@ public class BookListActivity extends AppCompatActivity {
     }
     private void NowPlayingMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
-        BookListActivity.this.setTitle("Now playing movies");
+        BookListActivity.this.setTitle(getResources().getText(R.string.nowplaying));
         client = new BookClient();
         client.getNowPlayingMovies(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Log.d("Ejecutando","Me estoy ejecutando");
-                    Toast toast1=Toast.makeText(getBaseContext(),"Has been found: "+response.getString("total_results")+" results",Toast.LENGTH_LONG);
+                    Toast toast1=Toast.makeText(getBaseContext(),getResources().getText(R.string.toast_results)+response.getString("total_results")+getResources().getText(R.string.toast_results1),Toast.LENGTH_LONG);
                     //toast1.setGravity(0,0,((Gravity.END)-50));
 
                     progress.setVisibility(ProgressBar.GONE);
@@ -288,26 +286,26 @@ public class BookListActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if(id==R.id.action_options){
-            final CharSequence[] options={"Populars","Upcoming","Now playing"};
+            final CharSequence[] options={getResources().getText(R.string.popular),getResources().getText(R.string.upcoming),getResources().getText(R.string.nowplaying)};
             final AlertDialog.Builder alertOpcion= new AlertDialog.Builder(BookListActivity.this);
-            alertOpcion.setTitle("Choose what movies want so see");
+            alertOpcion.setTitle(getResources().getText(R.string.alerDialog));
             alertOpcion.setItems(options, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    if (options[i].equals("Populars")){
+                    if (options[i].equals(getResources().getText(R.string.popular))){
                         PopularMovies();
                     }
-                    else if(options[i].equals("Upcoming")){
+                    else if(options[i].equals(getResources().getText(R.string.upcoming))){
                         UpComingMovies();
 
                     }
-                    else if(options[i].equals("Now playing")){
+                    else if(options[i].equals(getResources().getText(R.string.nowplaying))){
                         NowPlayingMovies();
 
                     }
 
                     else{
-                        Toast.makeText(getApplicationContext(),"Nothing choose", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),getResources().getText(R.string.nothing_choose), Toast.LENGTH_LONG).show();
                         dialogInterface.dismiss();
                     }
                 }
@@ -319,21 +317,25 @@ public class BookListActivity extends AppCompatActivity {
         }
         if(id==R.id.action_leng){
             client = new BookClient();
-            final CharSequence[] options={"Español-MX","English-US"};
+            final CharSequence[] options={"Español","English","Italian"};
             final AlertDialog.Builder alertOpcion= new AlertDialog.Builder(BookListActivity.this);
-            alertOpcion.setTitle("Select lenguage");
+            alertOpcion.setTitle(getResources().getText(R.string.select_lenguage));
             alertOpcion.setItems(options, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    if (options[i].equals("Español-MX")){
-                        client.getLenguage("es-MX");
+                    if (options[i].equals("Español")){
+                        client.getLenguage("es");
                     }
-                    else if(options[i].equals("English-US")){
-                        client.getLenguage("en-US");
+                    else if(options[i].equals("English")){
+                        client.getLenguage("en");
+
+                    }
+                    else if(options[i].equals("Italian")){
+                        client.getLenguage("it");
 
                     }
                     else{
-                        Toast.makeText(getApplicationContext(),"Nothing choose", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),getResources().getText(R.string.nothing_choose), Toast.LENGTH_LONG).show();
                         dialogInterface.dismiss();
                     }
                 }

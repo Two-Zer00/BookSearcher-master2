@@ -5,13 +5,16 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 public class BookClient {
+    //Locale loc=Locale.getDefault().toString();
     private static final String API_BASE_URL = "https://api.themoviedb.org/3/";
     private static final String API_KEY="?api_key=a36aa66b935c743a91a78e97f0e4bc9c";
     private static final String UrlLenguage="&language=";
-    private static String lenguage="en-US";
-
+    //Locale locales[] = Locale.getAvailableLocales()
+    private String lenguage = Locale.getDefault().getLanguage(); // es
+    //private String lenguages=lenguage;
     private AsyncHttpClient client;
 
     public BookClient() {

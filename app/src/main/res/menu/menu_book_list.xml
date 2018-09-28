@@ -12,10 +12,10 @@
         <item
             android:id="@+id/action_leng"
 
-            android:title="Lenguage" />
+            android:title="@string/menu_lenguaje" />
         <item
             android:id="@+id/action_options"
 
-            android:title="Change search" />
+            android:title="@string/menu_search" />
     </group>
 </menu>

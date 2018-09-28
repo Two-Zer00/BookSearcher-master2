@@ -117,7 +117,7 @@ public class BookDetailActivity extends AppCompatActivity {
         //Picasso.with(this).load(Uri.parse(book.getCompanieLogo(id_Companieslogo))).error(R.string.CompanyName).into(ivCompaniesLogo);
         tvTitle.setText(book.getTitle());
         Rate.setText((book.getVote()));
-        release_date.setText("Release date: "+book.getRelease_date());
+        release_date.setText(book.getRelease_date());
         tvOverview.setText(book.getOverview());
         // fetch extra book data from books API
         client = new BookClient();
@@ -166,7 +166,7 @@ public class BookDetailActivity extends AppCompatActivity {
                         double time=(response.getDouble("runtime"));
                         DecimalFormat df = new DecimalFormat("#.0");
                         double hrs= (time/60);
-                        tvPageCount.setText(((df.format(hrs))) + " hrs");
+                        tvPageCount.setText(((df.format(hrs))));
                         //Picasso.with(getBaseContext()).load(Uri.parse(book.getLargeCoverUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
                     }
 

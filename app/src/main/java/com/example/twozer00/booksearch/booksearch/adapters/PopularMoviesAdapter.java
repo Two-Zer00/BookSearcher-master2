@@ -42,21 +42,21 @@ public class PopularMoviesAdapter extends ArrayAdapter<Book> {
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.item_movie, parent, false);
             viewHolder.ivCover = (ImageView)convertView.findViewById(R.id.MovieImage);
-            //viewHolder.tvTitle = (TextView)convertView.findViewById(R.id.tvTitle);
-            //viewHolder.tvOverview = (TextView)convertView.findViewById(R.id.tvOverview);
-            //viewHolder.releaseDate = (TextView)convertView.findViewById(R.id.release_date);
-            //viewHolder.tvVoteAvs = (TextView)convertView.findViewById(R.id.tvVoteAvs);
+            viewHolder.tvTitle = (TextView)convertView.findViewById(R.id.tvTitle);
+            viewHolder.tvOverview = (TextView)convertView.findViewById(R.id.tvOverview);
+            viewHolder.releaseDate = (TextView)convertView.findViewById(R.id.release_date);
+            viewHolder.tvVoteAvs = (TextView)convertView.findViewById(R.id.tvVoteAvs);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (PopularMoviesAdapter.ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        //viewHolder.tvTitle.setText(book.getTitle());
+        viewHolder.tvTitle.setText(book.getTitle());
         //viewHolder.tvGenre.setText(book.getGenre());
-        //viewHolder.tvOverview.setText(book.getOverview());
-        //viewHolder.tvVoteAvs.setText(book.getVote());
+        viewHolder.tvOverview.setText(book.getOverview());
+        viewHolder.tvVoteAvs.setText(book.getVote());
         //Log.d("Date","release date created");
-        //viewHolder.releaseDate.setText("Release date: "+book.getRelease_date());
+        viewHolder.releaseDate.setText("Release date: "+book.getRelease_date());
         //Log.d("Date","release date created"+book.getRelease_date());
         Picasso.with(getContext()).load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
         //Picasso.with(getContext()).load(Uri.parse(book.getActorUrl())).error(R.drawable.ic_nocover).into(ivBookCover);

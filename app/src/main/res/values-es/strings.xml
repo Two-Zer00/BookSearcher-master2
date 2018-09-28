@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Buscador de peliculas</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="title_activity_book_detail">BookDetailActivity</string>
+    <string name="search_button">Buscar</string>
+    <string name="CompanyName">Compañia</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title">Titulo</string>
+    <string name="rate">Calificacion</string>
+    <string name="duration">Duracion</string>
+    <string name="overview">Resumen</string>
+    <string name="companies">Compañias</string>
+    <string name="actors">Reparto</string>
+    <string name="actor">Actor</string>
+    <string name="date">Fecha de lanzamiento:</string>
+    <string name="genres">Generos</string>
+    <string name="popular">Populares</string>
+    <string name="upcoming">Proximos</string>
+    <string name="nowplaying">En cartelera</string>
+    <string name="menu_lenguaje">Lenguaje</string>
+    <string name="hours">hrs</string>
+    <string name="menu_search">Buscar</string>
+    <string name="toast_results">Se han encontrado </string>
+    <string name="toast_results1"> resultados</string>
+    <string name="alerDialog">Elige lo que quieres ver</string>
+    <string name="select_lenguage">Selecciona el lenguaje</string>
+    <string name="nothing_choose">Nada seleccionado</string>
+    <string name="noresults">No se encontraron resultados :( intenta de nuevo :D</string>
+    <string name="image_saved">Imagn guardada</string>
+    <string name="image_nosaved">No se pudo guardar la imagen</string>
+
+
+
+
+
+</resources>
