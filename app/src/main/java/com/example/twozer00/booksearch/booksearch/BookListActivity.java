@@ -3,7 +3,9 @@ package com.example.twozer00.booksearch.booksearch;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Movie;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,10 +24,14 @@ import com.example.twozer00.booksearch.booksearch.adapters.BookAdapter;
 import com.example.twozer00.booksearch.booksearch.adapters.MovieCompaniesAdapter;
 import com.example.twozer00.booksearch.booksearch.adapters.MovieRecomendationAdapter;
 import com.example.twozer00.booksearch.booksearch.adapters.PopularMoviesAdapter;
+import com.example.twozer00.booksearch.booksearch.api.movieApi;
 import com.example.twozer00.booksearch.booksearch.models.Book;
+import com.example.twozer00.booksearch.booksearch.models.MovieAccessToken;
 import com.example.twozer00.booksearch.booksearch.models.MovieRecomendation;
 import com.example.twozer00.booksearch.booksearch.models.PopularMovies;
 import com.example.twozer00.booksearch.booksearch.net.BookClient;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -33,8 +39,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BookListActivity extends AppCompatActivity {
     public static final String BOOK_DETAIL_KEY = "movie";
@@ -47,7 +59,8 @@ public class BookListActivity extends AppCompatActivity {
     private PopularMoviesAdapter MovieAdapter;
     private BookClient client;
     private ProgressBar progress;
-
+    private String API_BASE_URL = "https://api.themoviedb.org/3/";
+    private String API_KEY = "a36aa66b935c743a91a78e97f0e4bc9c";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +77,7 @@ public class BookListActivity extends AppCompatActivity {
         PopularMovies();
         setupBookSelectedListener();
         //fetchBooks(client.getPopular(new JsonHttpResponseHandler()));
+        new getMovieAccesToken().execute();
     }
     public void setupBookSelectedListener() {
         lvBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -349,4 +363,47 @@ public class BookListActivity extends AppCompatActivity {
 
     }
 
+    private class getMovieAccesToken extends AsyncTask<URL, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+
+            movieApi movieApi = retrofit.create(movieApi.class);
+
+            Call<MovieAccessToken> call = movieApi.getAccesToken(API_KEY);
+            call.enqueue(new Callback<MovieAccessToken>() {
+                @Override
+                public void onResponse(Call<MovieAccessToken> accessTokenCall, Response<MovieAccessToken> response) {
+                    Log.d("RETROFIT", "I WORKED");
+                    Log.d("RETROFIT", response.toString());
+                    Log.d("RETROFIT", response.body().getRequest_token());
+                }
+
+                @Override
+                public void onFailure(Call<MovieAccessToken> accessTokenCall, Throwable t) {
+                    Log.d("RETROFIT", "I FAILED");
+                    // handle failure
+                }
+            });
+
+            return null;
+        }
+    }
 }
