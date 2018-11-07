@@ -19,7 +19,7 @@
     <string name="upcoming">Proximos</string>
     <string name="nowplaying">En cartelera</string>
     <string name="menu_lenguaje">Lenguaje</string>
-    <string name="hours">hrs</string>
+    <string name="hours"> hrs</string>
     <string name="menu_search">Buscar</string>
     <string name="toast_results">Se han encontrado </string>
     <string name="toast_results1"> resultados</string>
@@ -29,6 +29,24 @@
     <string name="noresults">No se encontraron resultados :( intenta de nuevo :D</string>
     <string name="image_saved">Imagn guardada</string>
     <string name="image_nosaved">No se pudo guardar la imagen</string>
+    <string name="menu_login">Iniciar sesión</string>
+
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="menu_account">Cuenta</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Correo</string>
+    <string name="prompt_password">Contraseña (opcional)</string>
+    <string name="action_sign_in">Iniciar sesión o registrarse</string>
+    <string name="action_sign_in_short">Iniciar sesión</string>
+    <string name="error_invalid_email">Correo invalido</string>
+    <string name="error_invalid_password">Contraseña demasiado corta</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">Se necesita rellenar este campo</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 
 
 

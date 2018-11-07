@@ -58,9 +58,10 @@ public class PopularMoviesAdapter extends ArrayAdapter<Book> {
         //Log.d("Date","release date created");
         viewHolder.releaseDate.setText("Release date: "+book.getRelease_date());
         //Log.d("Date","release date created"+book.getRelease_date());
-        Picasso.with(getContext()).load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
+        //Picasso.with(getContext()).load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
         //Picasso.with(getContext()).load(Uri.parse(book.getActorUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
         // Return the completed view to render on screen
+        Picasso.get().load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
         return convertView;
     }
 

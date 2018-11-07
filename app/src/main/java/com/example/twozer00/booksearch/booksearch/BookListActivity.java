@@ -48,8 +48,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.twozer00.booksearch.booksearch.LoginActivity.session_id;
+
 public class BookListActivity extends AppCompatActivity {
     public static final String BOOK_DETAIL_KEY = "movie";
+    public static  String request_Token="";
     //public static final String BOOK_DETAIL_RECOMENDATION_KEY = "recommendations";
     //private String popularMovies=BookClient.;
     //private String popular =""
@@ -60,7 +63,7 @@ public class BookListActivity extends AppCompatActivity {
     private BookClient client;
     private ProgressBar progress;
     private String API_BASE_URL = "https://api.themoviedb.org/3/";
-    private String API_KEY = "a36aa66b935c743a91a78e97f0e4bc9c";
+    public static String API_KEY = "a36aa66b935c743a91a78e97f0e4bc9c";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,19 @@ public class BookListActivity extends AppCompatActivity {
         setupBookSelectedListener();
         //fetchBooks(client.getPopular(new JsonHttpResponseHandler()));
         new getMovieAccesToken().execute();
+    }
+
+
+    public static void validateAccount(MenuItem v){
+
+        if(session_id.isEmpty()){
+            v.setVisible(false);
+        }
+        else{
+            v.setVisible(true);
+        }
+
+
     }
     public void setupBookSelectedListener() {
         lvBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -359,6 +375,29 @@ public class BookListActivity extends AppCompatActivity {
 
             return true;
         }
+        if(id==R.id.action_login){
+            Intent intent = new Intent(BookListActivity.this, LoginActivity.class);
+            //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
+            //intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
+            //intent1.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
+            startActivity(intent);
+
+
+            return true;
+        }
+
+        if(id==R.id.action_acount){
+            validateAccount(item);
+            Intent intent = new Intent(BookListActivity.this, AcountDetailsActivity.class);
+            //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
+            //intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
+            //intent1.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
+            startActivity(intent);
+
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
 
     }
@@ -394,6 +433,7 @@ public class BookListActivity extends AppCompatActivity {
                     Log.d("RETROFIT", "I WORKED");
                     Log.d("RETROFIT", response.toString());
                     Log.d("RETROFIT", response.body().getRequest_token());
+                    request_Token=response.body().getRequest_token();
                 }
 
                 @Override

@@ -58,7 +58,7 @@ public class MovieRecomendationAdapter extends ArrayAdapter<Book> {
         //viewHolder.tvGenre.setText(book.getGenre());
         //viewHolder.tvVoteAvs.setText(book.getVote());
         //viewHolder.release_date.setText(book.getRelease_date());
-        Picasso.with(getContext()).load(Uri.parse(Movie.getCoverUrl())).error(R.id.tvTitle).into(viewHolder.ivCover);
+        //Picasso.get().load(Uri.parse(Movie.getCoverUrl())).error(R.id.tvTitle).into(viewHolder.ivCover);
         // Return the completed view to render on screen
         return convertView;
     }

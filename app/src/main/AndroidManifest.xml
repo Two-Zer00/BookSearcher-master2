@@ -36,7 +36,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".AcountDetailsActivity"
+            android:label="@string/title_activity_acount_details"></activity>
+
+
+        <activity
+            android:name=".MovieReviewActivity"
+            android:label="@string/title_activity_acount_details"></activity>
+
+
     </application>
 
 </manifest>

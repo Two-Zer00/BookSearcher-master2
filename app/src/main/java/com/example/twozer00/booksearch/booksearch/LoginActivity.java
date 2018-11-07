@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telecom.Call;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,16 +34,25 @@ import android.widget.TextView;
 import com.example.twozer00.booksearch.booksearch.api.RetrofitClient;
 import com.example.twozer00.booksearch.booksearch.api.movieApi;
 import com.example.twozer00.booksearch.booksearch.models.MovieAccessToken;
+import com.example.twozer00.booksearch.booksearch.models.MovieAccessTokenLogin;
+import com.example.twozer00.booksearch.booksearch.models.MovieSessionId;
 import com.example.twozer00.booksearch.booksearch.models.User;
+import com.example.twozer00.booksearch.booksearch.net.BookClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.example.twozer00.booksearch.booksearch.BookListActivity.request_Token;
+import static com.example.twozer00.booksearch.booksearch.net.BookClient.API_BASE_URL;
+import static com.example.twozer00.booksearch.booksearch.net.BookClient.API_KEY;
 
 /**
  * A login screen that offers login via email/password.
@@ -71,6 +81,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    static String request_token;
+    static String session_id;
+    private String api_key="a36aa66b935c743a91a78e97f0e4bc9c";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +91,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -197,7 +210,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email!="";
     }
 
     private boolean isPasswordValid(String password) {
@@ -311,9 +324,63 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
 
-            // TODO: register the new account here.
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+
+            movieApi movieApi = retrofit.create(movieApi.class);
+
+            retrofit2.Call<MovieAccessTokenLogin> call = movieApi.getAccesTokenLogin(api_key,mEmail,mPassword,request_Token);
+            call.enqueue(new Callback<MovieAccessTokenLogin>() {
+                @Override
+                public void onResponse(retrofit2.Call<MovieAccessTokenLogin> accessTokenCall, Response<MovieAccessTokenLogin> response) {
+                    Log.d("RETROFIT", "I WORKED Login accestoken");
+                    Log.d("RETROFIT", response.toString());
+                    Log.d("RETROFIT", response.body().getRequest_token());
+                    request_token = response.body().getRequest_token();
+
+                    Gson gson = new GsonBuilder()
+                            .setLenient()
+                            .create();
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(API_BASE_URL)
+                            .addConverterFactory(GsonConverterFactory.create(gson))
+                            .build();
+
+                    movieApi movieApi = retrofit.create(movieApi.class);
+
+                    retrofit2.Call<MovieSessionId> call = movieApi.getSessionId(api_key,request_Token);
+                    call.enqueue(new Callback<MovieSessionId>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<MovieSessionId> accessTokenCall, Response<MovieSessionId> response) {
+                            Log.d("RETROFIT", "I WORKED Session id");
+                            Log.d("RETROFIT", response.toString());
+                            Log.d("RETROFIT", response.body().getSession_id());
+                            session_id = response.body().getSession_id();
+
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<MovieSessionId> accessTokenCall, Throwable t) {
+                            Log.d("RETROFIT", "I FAILED");
+                            // handle failure
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<MovieAccessTokenLogin> accessTokenCall, Throwable t) {
+                    Log.d("RETROFIT", "I FAILED");
+                    // handle failure
+                }
+            });
             return true;
         }
 

@@ -27,7 +27,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,7 +63,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class BookDetailActivity extends AppCompatActivity {
     private ImageView ivBookCover;
-    //private ImageView bgImage;
+    private ImageView bgImage;
     private ImageView MovieActor;
     /*private ImageView ivMovieCoverR;
     private ImageView ivCompaniesLogo;
@@ -84,9 +86,9 @@ public class BookDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_scrolling);
+        setContentView(R.layout.activity_book_detail);
         ivBookCover = (ImageView) findViewById(R.id.ivBookCover);
-        //bgImage = (ImageView) findViewById(R.id.imagebg);
+        bgImage = (ImageView) findViewById(R.id.BgImage);
         //ivMovieCoverR = (ImageView) findViewById(R.id.ivMovieCoverR);
         //ivCompaniesLogo = (ImageView) findViewById(R.id.ivCompaniesLogo);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -100,6 +102,16 @@ public class BookDetailActivity extends AppCompatActivity {
         // Use the book to populate the data into our views
         Book book = (Book) getIntent().getSerializableExtra(BookListActivity.BOOK_DETAIL_KEY);
         Log.d("BookCreate","Creado");
+        final Button button = findViewById(R.id.button1);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(BookDetailActivity.this, MovieReviewActivity.class);
+                //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
+                //intent1.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
+                startActivity(intent);
+            }
+        });
+
         loadBook(book);
 
 
@@ -111,9 +123,9 @@ public class BookDetailActivity extends AppCompatActivity {
         //change activity title
         this.setTitle(book.getTitle());
         // Populate data
-        Picasso.with(this).load(Uri.parse(book.getLargeCoverUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
+        Picasso.get().load(Uri.parse(book.getLargeCoverUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
         //Picasso.with(this).load(Uri.parse(BookClient.get())).error(R.drawable.ic_nocover).into(ivBookCover);
-
+        Picasso.get().load(Uri.parse(book.getbgUrl())).error(R.drawable.ic_nocover).into(bgImage);
         //Picasso.with(this).load(Uri.parse(book.getCompanieLogo(id_Companieslogo))).error(R.string.CompanyName).into(ivCompaniesLogo);
         tvTitle.setText(book.getTitle());
         Rate.setText((book.getVote()));
@@ -238,7 +250,8 @@ public class BookDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-public boolean Permissions(){
+
+    public boolean Permissions(){
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
             return true;
         }
@@ -317,5 +330,12 @@ return false;
         //guardar imagen
         save savefile = new save();
         savefile.SaveImage(getApplicationContext(), bmap);
+    }
+
+    public void loadReviews(){
+        Intent intent = new Intent();
+
+
+
     }
 }

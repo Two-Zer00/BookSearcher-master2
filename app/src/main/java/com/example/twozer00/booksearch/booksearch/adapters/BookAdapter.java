@@ -63,7 +63,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
             //Log.d("Date","release date created");
             viewHolder.releaseDate.setText(book.getRelease_date());
             //Log.d("Date","release date created"+book.getRelease_date());
-            Picasso.with(getContext()).load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
+            Picasso.get().load(Uri.parse(book.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.ivCover);
         return convertView;
     }
 

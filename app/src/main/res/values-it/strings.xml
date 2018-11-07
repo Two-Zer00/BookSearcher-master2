@@ -18,7 +18,7 @@
     <string name="popular">Popolares</string>
     <string name="upcoming">imminente</string>
     <string name="nowplaying">ora giocando</string>
-    <string name="hours">hrs</string>
+    <string name="hours"> hrs</string>
     <string name="menu_lenguaje">Lingua</string>
     <string name="menu_search">ricerca</string>
     <string name="toast_results">è stato trovato </string>
@@ -29,5 +29,25 @@
     <string name="noresults">Non ci sono risultati :( riprova: D </string>
     <string name="image_saved">Immagine salvata</string>
     <string name="image_nosaved">Non è possibile salvare l\'immagine</string>
+
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="menu_account">Cuenta</string>
+
+    <string name="menu_login">Accesso</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Password (opzionale)</string>
+    <string name="action_sign_in">Accedi o registrati</string>
+    <string name="action_sign_in_short">Accesso</string>
+    <string name="error_invalid_email">E-mail non valido</string>
+    <string name="error_invalid_password">Password troppo breve</string>
+    <string name="error_incorrect_password">La password è errata</string>
+    <string name="error_field_required">Devi compilare questo campo</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+
 
 </resources>

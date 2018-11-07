@@ -9,8 +9,8 @@ import java.util.Locale;
 
 public class BookClient {
     //Locale loc=Locale.getDefault().toString();
-    private static final String API_BASE_URL = "https://api.themoviedb.org/3/";
-    private static final String API_KEY="?api_key=a36aa66b935c743a91a78e97f0e4bc9c";
+    public static final String API_BASE_URL = "https://api.themoviedb.org/3/";
+    public static final String API_KEY="?api_key=a36aa66b935c743a91a78e97f0e4bc9c";
     private static final String UrlLenguage="&language=";
     //Locale locales[] = Locale.getAvailableLocales()
     private String lenguage = Locale.getDefault().getLanguage(); // es
@@ -33,6 +33,11 @@ public class BookClient {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void getReviews(final String id, JsonHttpResponseHandler handler) {
+            String url = getApiUrl(id+"/reviews" +API_KEY);
+            client.get(url +UrlLenguage+lenguage, handler);
     }
 
     public String getLenguage(String leng) {
@@ -70,6 +75,10 @@ public class BookClient {
     public void getPopularMovies(JsonHttpResponseHandler handler) {
         String url = getApiUrl("movie/popular/");
         client.get(url +API_KEY+UrlLenguage+lenguage, handler);
+    }
+    public void getAccountDetails(JsonHttpResponseHandler handler, String session_ID) {
+        String url = getApiUrl("account");
+        client.get(url +API_KEY+ "&session_id="+session_ID, handler);
     }
     public void getSimilarMovies(String id_Movie, JsonHttpResponseHandler handler) {
         String url = getApiUrl("movie/");

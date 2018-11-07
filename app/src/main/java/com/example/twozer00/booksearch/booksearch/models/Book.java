@@ -46,11 +46,11 @@ public class Book implements Serializable{
         return "https://image.tmdb.org/t/p/w185/" + imagecode;
     }
     public String getbgUrl() {
-        return "https://image.tmdb.org/t/p/w185/" + bgimagecode;
+        return "https://image.tmdb.org/t/p/original/" + bgimagecode;
     }
     // Get large sized book cover from covers API
     public String getLargeCoverUrl() {
-        return "https://image.tmdb.org/t/p/w342/" + imagecode;
+        return "https://image.tmdb.org/t/p/w780/" + imagecode;
     }
     // Returns a Book given the expected JSON
     public static Book fromJson(JSONObject jsonObject) {
