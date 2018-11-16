@@ -1,8 +1,10 @@
 package com.example.twozer00.booksearch.booksearch;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Movie;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -52,6 +54,8 @@ import static com.example.twozer00.booksearch.booksearch.LoginActivity.session_i
 
 public class BookListActivity extends AppCompatActivity {
     public static final String BOOK_DETAIL_KEY = "movie";
+    SharedPreferences ShPref;
+
     public static  String request_Token="";
     //public static final String BOOK_DETAIL_RECOMENDATION_KEY = "recommendations";
     //private String popularMovies=BookClient.;
@@ -65,9 +69,14 @@ public class BookListActivity extends AppCompatActivity {
     private String API_BASE_URL = "https://api.themoviedb.org/3/";
     public static String API_KEY = "a36aa66b935c743a91a78e97f0e4bc9c";
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ShPref = getSharedPreferences("Save",Context.MODE_PRIVATE);
+        Log.d("SharedPref",ShPref.getString("SessionId",""));
         setContentView(R.layout.activity_book_list);
         lvBooks = (ListView) findViewById(R.id.lvBooks);
         //PopularMovie = (ListView) findViewById(R.id.PopularMovie);

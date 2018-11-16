@@ -3,6 +3,8 @@ package com.example.twozer00.booksearch.booksearch;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
@@ -77,6 +79,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private UserLoginTask mAuthTask = null;
 
     // UI references.
+    SharedPreferences ShPref;
+
+
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -339,9 +344,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             call.enqueue(new Callback<MovieAccessTokenLogin>() {
                 @Override
                 public void onResponse(retrofit2.Call<MovieAccessTokenLogin> accessTokenCall, Response<MovieAccessTokenLogin> response) {
-                    Log.d("RETROFIT", "I WORKED Login accestoken");
-                    Log.d("RETROFIT", response.toString());
-                    Log.d("RETROFIT", response.body().getRequest_token());
+                    Log.d("RETROFIT2", "I WORKED Login accestoken");
+                    Log.d("RETROFIT2", response.toString());
+                    Log.d("RETROFIT2", response.body().getRequest_token());
                     request_token = response.body().getRequest_token();
 
                     Gson gson = new GsonBuilder()
@@ -359,10 +364,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     call.enqueue(new Callback<MovieSessionId>() {
                         @Override
                         public void onResponse(retrofit2.Call<MovieSessionId> accessTokenCall, Response<MovieSessionId> response) {
-                            Log.d("RETROFIT", "I WORKED Session id");
-                            Log.d("RETROFIT", response.toString());
-                            Log.d("RETROFIT", response.body().getSession_id());
+                            Log.d("RETROFIT2", "I WORKED Session id");
+                            Log.d("RETROFIT2", response.toString());
+                            Log.d("RETROFIT2", response.body().getSession_id());
                             session_id = response.body().getSession_id();
+                            ShPref = getSharedPreferences("Save",Context.MODE_PRIVATE);
+                            SharedPreferences.Editor edit =ShPref.edit();
+                            edit.putString("SessionId",session_id);
+                            edit.apply();
+                            Log.d("SharedPref",ShPref.getString("SessionId",""));
+                            Log.d("SharedPref", "Intentooo SP");
 
                         }
 
