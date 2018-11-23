@@ -128,6 +128,7 @@ public class BookListActivity extends AppCompatActivity {
                         if(docs.length()!=0){
                         // Parse json array into array of model objects
                         final ArrayList<Book> books = Book.fromJson(docs);
+                        Log.d("Is Tv",  String.valueOf(books.size()));
                         // Remove all books from the adapter
                         bookAdapter.clear();
                         // Load model objects into the adapter

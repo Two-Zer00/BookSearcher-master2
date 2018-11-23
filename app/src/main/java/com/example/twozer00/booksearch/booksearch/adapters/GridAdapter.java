@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.example.twozer00.booksearch.booksearch.BookDetailActivity;
 import com.example.twozer00.booksearch.booksearch.GridMovies;
 import com.example.twozer00.booksearch.booksearch.R;
+import com.example.twozer00.booksearch.booksearch.models.Book;
 import com.example.twozer00.booksearch.booksearch.models.Element;
 import com.squareup.picasso.Picasso;
 
@@ -22,9 +23,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
-    private ArrayList<Element> dataset;
+    private ArrayList<Book> dataset;
     private Context context;
-    private Element el;
+    private Book el;
 
     public GridAdapter(Context context){
         this.context = context;
@@ -53,6 +54,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         return dataset.size();
     }
 
+    public void addElemList(ArrayList<Book> booklist){
+        dataset.addAll(booklist);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView Poster;
         private CardView item;
@@ -76,7 +82,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                     //Bitmap bitmap = drawableToBitmap(fotoImageView.getDrawable());
                     //ByteArrayOutputStream bs = new ByteArrayOutputStream();
                     //bitmap.compress(Bitmap.CompressFormat.PNG, 100, bs);
-                    //i.putExtra("POKEMON_ID", p.getNumber());
+                    i.putExtra("ID_ELEMENT", el.getId_Movie());
                     //i.putExtra("POKEMON_NAME", p.getName());
                     //i.putExtra("POKEMON_IMAGE", bs.toByteArray());
                     view.getContext().startActivity(i);
