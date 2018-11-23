@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -32,14 +33,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.twozer00.booksearch.booksearch.adapters.MovieRecomendationAdapter;
+import com.example.twozer00.booksearch.booksearch.api.movieApi;
 import com.example.twozer00.booksearch.booksearch.models.Book;
+import com.example.twozer00.booksearch.booksearch.models.DeleteSession;
 import com.example.twozer00.booksearch.booksearch.models.MovieRecomendation;
+import com.example.twozer00.booksearch.booksearch.models.Rating;
 import com.example.twozer00.booksearch.booksearch.net.BookClient;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
@@ -57,11 +64,20 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.example.twozer00.booksearch.booksearch.BookListActivity.API_KEY;
+import static com.example.twozer00.booksearch.booksearch.LoginActivity.session_id;
+import static com.example.twozer00.booksearch.booksearch.net.BookClient.API_BASE_URL;
 
 public class BookDetailActivity extends AppCompatActivity {
+    SharedPreferences ShPref;
     private ImageView ivBookCover;
     private ImageView bgImage;
     private ImageView MovieActor;
@@ -76,6 +92,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private TextView tvPageCount;
     private TextView release_date;
     private TextView cast;
+    private RatingBar stars;
     private TextView ActorsImage;
     private BookClient client;
     private ArrayList<String> id_Companieslogo=new ArrayList<String>();
@@ -86,8 +103,10 @@ public class BookDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ShPref =getSharedPreferences("Save",Context.MODE_PRIVATE);
         setContentView(R.layout.activity_book_detail);
         ivBookCover = (ImageView) findViewById(R.id.ivBookCover);
+        stars = (RatingBar) findViewById(R.id.starRate);
         bgImage = (ImageView) findViewById(R.id.BgImage);
         //ivMovieCoverR = (ImageView) findViewById(R.id.ivMovieCoverR);
         //ivCompaniesLogo = (ImageView) findViewById(R.id.ivCompaniesLogo);
@@ -100,17 +119,90 @@ public class BookDetailActivity extends AppCompatActivity {
         tvOverview = (TextView) findViewById(R.id.tvOverview);
         cast=(TextView) findViewById(R.id.cast);
         // Use the book to populate the data into our views
-        Book book = (Book) getIntent().getSerializableExtra(BookListActivity.BOOK_DETAIL_KEY);
+        final Book book = (Book) getIntent().getSerializableExtra(BookListActivity.BOOK_DETAIL_KEY);
         Log.d("BookCreate","Creado");
         final Button button = findViewById(R.id.button1);
+        final Button Send = findViewById(R.id.sendRate);
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(BookDetailActivity.this, MovieReviewActivity.class);
                 //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
                 //intent1.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
                 startActivity(intent);
+                            }
+        }        );
+        Send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Gson gson = new GsonBuilder()
+                        .setLenient()
+                        .create();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(API_BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+
+                movieApi movieApi = retrofit.create(movieApi.class);
+
+                Call<Rating> call = movieApi.setRating(book.getId_Movie(),API_KEY,ShPref.getString("SessionId",""),String.valueOf(stars.getRating()*2));
+                call.enqueue(new Callback<Rating>() {
+                    @Override
+                    public void onResponse(Call<Rating> rate, Response<Rating> response) {
+                        Log.d("RATING", "I WORKED");
+                        Log.d("RATING", response.toString());
+                        Log.d("RATING", String.valueOf(stars.getRating()));
+
+                        Toast.makeText(BookDetailActivity.this,"Tu califcación ha sido enviada",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Rating> rate, Throwable t) {
+                        Log.d("RATING", "I FAILED");
+                        // handle failure
+                    }
+                });
+
+
             }
         });
+
+        /*stars.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, final float rating,
+                                        boolean fromUser) {
+                Gson gson = new GsonBuilder()
+                        .setLenient()
+                        .create();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(API_BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+
+                movieApi movieApi = retrofit.create(movieApi.class);
+
+                Call<Rating> call = movieApi.setRating(book.getId_Movie(),API_KEY,session_id,String.valueOf(rating*2));
+                call.enqueue(new Callback<Rating>() {
+                    @Override
+                    public void onResponse(Call<Rating> rate, Response<Rating> response) {
+                        Log.d("RATING", "I WORKED");
+                        Log.d("RATING", response.toString());
+                        Log.d("RATING", String.valueOf(rating));
+
+                        //Toast.makeText(BookListActivity.this,"Logout success",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Rating> rate, Throwable t) {
+                        Log.d("RATING", "I FAILED");
+                        // handle failure
+                    }
+                });
+            }
+        });*/
 
         loadBook(book);
 
@@ -122,6 +214,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
         //change activity title
         this.setTitle(book.getTitle());
+        stars.setRating(Float.valueOf(book.getVote())/2);
         // Populate data
         Picasso.get().load(Uri.parse(book.getLargeCoverUrl())).error(R.drawable.ic_nocover).into(ivBookCover);
         //Picasso.with(this).load(Uri.parse(BookClient.get())).error(R.drawable.ic_nocover).into(ivBookCover);
@@ -155,6 +248,7 @@ public class BookDetailActivity extends AppCompatActivity {
                         }
 
                         tvPublisher.setText(TextUtils.join("\n", companies));
+
 
                     }
                     if(response.has("genres")){
@@ -220,6 +314,8 @@ public class BookDetailActivity extends AppCompatActivity {
 
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -28,6 +28,7 @@ import com.example.twozer00.booksearch.booksearch.adapters.MovieRecomendationAda
 import com.example.twozer00.booksearch.booksearch.adapters.PopularMoviesAdapter;
 import com.example.twozer00.booksearch.booksearch.api.movieApi;
 import com.example.twozer00.booksearch.booksearch.models.Book;
+import com.example.twozer00.booksearch.booksearch.models.DeleteSession;
 import com.example.twozer00.booksearch.booksearch.models.MovieAccessToken;
 import com.example.twozer00.booksearch.booksearch.models.MovieRecomendation;
 import com.example.twozer00.booksearch.booksearch.models.PopularMovies;
@@ -66,7 +67,7 @@ public class BookListActivity extends AppCompatActivity {
     private PopularMoviesAdapter MovieAdapter;
     private BookClient client;
     private ProgressBar progress;
-    private String API_BASE_URL = "https://api.themoviedb.org/3/";
+    private static String API_BASE_URL = "https://api.themoviedb.org/3/";
     public static String API_KEY = "a36aa66b935c743a91a78e97f0e4bc9c";
 
 
@@ -93,17 +94,6 @@ public class BookListActivity extends AppCompatActivity {
     }
 
 
-    public static void validateAccount(MenuItem v){
-
-        if(session_id.isEmpty()){
-            v.setVisible(false);
-        }
-        else{
-            v.setVisible(true);
-        }
-
-
-    }
     public void setupBookSelectedListener() {
         lvBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -396,7 +386,7 @@ public class BookListActivity extends AppCompatActivity {
         }
 
         if(id==R.id.action_acount){
-            validateAccount(item);
+            //validateAccount(item);
             Intent intent = new Intent(BookListActivity.this, AcountDetailsActivity.class);
             //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
             //intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
@@ -404,6 +394,42 @@ public class BookListActivity extends AppCompatActivity {
             startActivity(intent);
 
 
+            return true;
+        }
+
+        if(id==R.id.action_logout){
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+
+            movieApi movieApi = retrofit.create(movieApi.class);
+
+            Call<DeleteSession> call = movieApi.getSuccess(API_KEY,session_id);
+            call.enqueue(new Callback<DeleteSession>() {
+                @Override
+                public void onResponse(Call<DeleteSession> accessTokenCall, Response<DeleteSession> response) {
+                    Log.d("LOGOUT", "I WORKED");
+                    Log.d("LOGOUT", response.toString());
+                    //Log.d("RETROFIT", response.body().getRequest_token());
+                    //request_Token=response.body().getRequest_token();
+                    SharedPreferences.Editor edit =ShPref.edit();
+                    edit.remove("SessionId");
+                    edit.apply();
+
+                    Toast.makeText(BookListActivity.this,"Logout success",Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<DeleteSession> accessTokenCall, Throwable t) {
+                    Log.d("LOGOUT", "I FAILED");
+                    // handle failure
+                }
+            });
             return true;
         }
 

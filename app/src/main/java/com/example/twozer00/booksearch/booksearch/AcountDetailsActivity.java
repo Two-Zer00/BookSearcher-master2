@@ -1,5 +1,7 @@
 package com.example.twozer00.booksearch.booksearch;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +32,9 @@ import static com.example.twozer00.booksearch.booksearch.LoginActivity.session_i
 import static com.example.twozer00.booksearch.booksearch.net.BookClient.API_BASE_URL;
 
 public class AcountDetailsActivity extends Activity {
+
+    SharedPreferences ShPref;
+
     private TextView username;
     private TextView lenguage;
     private TextView name;
@@ -48,8 +53,14 @@ public class AcountDetailsActivity extends Activity {
         lenguage =(TextView) findViewById(R.id.Accountlenguage);
         country =(TextView) findViewById(R.id.AccountCountry);
 
+        ShPref = getSharedPreferences("Save",Context.MODE_PRIVATE);
 
-        accountDetails();
+
+        if(ShPref.getString("SessionId","")!=""){
+            session_id=ShPref.getString("SessionId","");
+            accountDetails();
+        }
+
 
 
     }

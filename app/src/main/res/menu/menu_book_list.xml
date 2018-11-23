@@ -26,5 +26,10 @@
             android:id="@+id/action_acount"
             android:title="@string/menu_account"
             />
+
+        <item
+            android:id="@+id/action_logout"
+            android:title="log out"
+            />
     </group>
 </menu>
