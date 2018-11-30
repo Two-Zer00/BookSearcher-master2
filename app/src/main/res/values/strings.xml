@@ -28,6 +28,7 @@
     <string name="noresults">There is not results :( try again :D</string>
     <string name="image_saved">Image saved</string>
     <string name="image_nosaved">Can not save the image</string>
+    <string name="rate_error1">You must be logged for rate :D</string>
 
     <string name="menu_login">Login</string>
     <string name="title_activity_login">Sign in</string>
@@ -37,7 +38,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in </string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>

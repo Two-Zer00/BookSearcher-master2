@@ -45,39 +45,39 @@ public class Review implements Serializable {
         this.url = url;
     }
 
-    public static Review fromJson(JSONObject jsonObject) {
+    public static Review fromJson (JSONObject jsonObject) {
         Review review = new Review();
-        try {
-            review.author=jsonObject.getString("author");
+        try{
+            review.author = jsonObject.getString("author");
             review.content = jsonObject.getString("content");
-            review.id = jsonObject.getString("id");
-            review.url= jsonObject.getString("url");
-        } catch (JSONException e) {
+            review.id =jsonObject.getString("id");
+
+        }catch (JSONException e){
             e.printStackTrace();
             return null;
         }
-        // Return new object
         return review;
+
     }
-    // Decodes array of book json results into business model objects
-    public static ArrayList<Review> fromJson(JSONArray jsonArray) {
-        ArrayList<Review> review = new ArrayList<Review>(jsonArray.length());
-        // Process each result in json array, decode and convert to business
-        // object
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject bookJson = null;
+    public static ArrayList<Review> fromJson(JSONArray jsonArray){
+        ArrayList<Review> reviews = new ArrayList<>(jsonArray.length());
+        for (int i = 0 ;i< jsonArray.length();i++){
+            JSONObject reviewJson = null;
             try {
-                bookJson = jsonArray.getJSONObject(i);
-            } catch (Exception e) {
+                reviewJson = jsonArray.getJSONObject(i);
+            }catch (Exception e ){
                 e.printStackTrace();
                 continue;
             }
-            Review review1 = Review.fromJson(bookJson );
-            if (review != null) {
-                review.add(review1);
+            Review review = Review.fromJson(reviewJson);
+            if(review != null){
+                reviews.add(review);
             }
         }
-        return review;
+        return reviews;
     }
+
+
+
 
 }

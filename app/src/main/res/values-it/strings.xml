@@ -30,6 +30,8 @@
     <string name="image_saved">Immagine salvata</string>
     <string name="image_nosaved">Non è possibile salvare l\'immagine</string>
 
+    <string name="rate_error1">Devi essere registrato per rate :D</string>
+
     <string name="title_activity_login">Sign in</string>
 
     <string name="menu_account">Cuenta</string>

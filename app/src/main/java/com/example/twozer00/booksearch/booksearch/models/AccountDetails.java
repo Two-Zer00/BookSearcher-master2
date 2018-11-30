@@ -1,11 +1,38 @@
 package com.example.twozer00.booksearch.booksearch.models;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+
 public class AccountDetails {
+    private JsonObject avatar;
+
+    private JSONArray gravatar;
+
     private String hash;
     private String name;
     private String username;
     private String iso_3166_1;
     private String iso_639_1;
+
+    public JsonObject getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(JsonObject avatar) {
+        this.avatar = avatar;
+    }
+
+    public JSONArray getGravatar() {
+        return gravatar;
+    }
+
+    public void setGravatar(JSONArray gravatar) {
+        this.gravatar = gravatar;
+    }
 
     public String getIso_3166_1() {
         return iso_3166_1;
@@ -24,6 +51,7 @@ public class AccountDetails {
     }
 
     public String getHash() {
+
         return hash;
     }
 
@@ -46,6 +74,13 @@ public class AccountDetails {
     public void setUsername(String username) {
         this.username = username;
     }
+
+
+    @Override
+    public String toString() {
+        return "name: "+ this.name+"\n"+"username" + this.name + "hash: " + this.hash +"\n";
+    }
+
 
 
 }

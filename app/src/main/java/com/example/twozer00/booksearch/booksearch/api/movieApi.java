@@ -1,8 +1,5 @@
 package com.example.twozer00.booksearch.booksearch.api;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.example.twozer00.booksearch.booksearch.models.AccountDetails;
 import com.example.twozer00.booksearch.booksearch.models.DeleteSession;
 import com.example.twozer00.booksearch.booksearch.models.Element;
@@ -17,7 +14,6 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -49,8 +45,8 @@ public interface movieApi {
 
     @Headers("Accept: application/json;charset=utf-8")
     @FormUrlEncoded
-    @POST("movie/{movie_id}/rating?")
-    Call<Rating> setRating(@Path("movie_id") String movie_id,@Query("api_key")String api_key, @Query("session_id") String session_id,@Field("value") String value);
+    @POST("{movie}/{movie_id}/rating?")
+    Call<Rating> setRating(@Path("movie")String media,@Path("movie_id") String movie_id,@Query("api_key")String api_key, @Query("session_id") String session_id,@Field("value") String value);
 
     @FormUrlEncoded
     @POST("authentication/session/new?")
@@ -65,5 +61,6 @@ public interface movieApi {
 
     @GET("/discover/movie?sort_by=vote_average.desc")
     void getHighestRated(@Query("api_key") String api_key, Callback<List<movieModel>> response);
+
 
 }

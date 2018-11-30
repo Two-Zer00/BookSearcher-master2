@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.twozer00.booksearch.booksearch.api.RetrofitClient;
 import com.example.twozer00.booksearch.booksearch.api.movieApi;
@@ -346,45 +347,51 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 public void onResponse(retrofit2.Call<MovieAccessTokenLogin> accessTokenCall, Response<MovieAccessTokenLogin> response) {
                     Log.d("RETROFIT2", "I WORKED Login accestoken");
                     Log.d("RETROFIT2", response.toString());
-                    Log.d("RETROFIT2", response.body().getRequest_token());
-                    request_token = response.body().getRequest_token();
 
-                    Gson gson = new GsonBuilder()
-                            .setLenient()
-                            .create();
+                    if(response.code()!=200){
+                        Toast.makeText(getBaseContext(),"Incorrect, email or password",Toast.LENGTH_SHORT).show();
+                    }
+                    else {
 
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(API_BASE_URL)
-                            .addConverterFactory(GsonConverterFactory.create(gson))
-                            .build();
+                        Log.d("RETROFIT2", response.body().getRequest_token());
+                        request_token = response.body().getRequest_token();
 
-                    movieApi movieApi = retrofit.create(movieApi.class);
+                        Gson gson = new GsonBuilder()
+                                .setLenient()
+                                .create();
 
-                    retrofit2.Call<MovieSessionId> call = movieApi.getSessionId(api_key,request_Token);
-                    call.enqueue(new Callback<MovieSessionId>() {
-                        @Override
-                        public void onResponse(retrofit2.Call<MovieSessionId> accessTokenCall, Response<MovieSessionId> response) {
-                            Log.d("RETROFIT2", "I WORKED Session id");
-                            Log.d("RETROFIT2", response.toString());
-                            Log.d("RETROFIT2", response.body().getSession_id());
-                            session_id = response.body().getSession_id();
-                            ShPref = getSharedPreferences("Save",Context.MODE_PRIVATE);
-                            SharedPreferences.Editor edit =ShPref.edit();
-                            edit.putString("SessionId",session_id);
-                            edit.apply();
-                            Log.d("SharedPref",ShPref.getString("SessionId",""));
-                            Log.d("SharedPref", "Intentooo SP");
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(API_BASE_URL)
+                                .addConverterFactory(GsonConverterFactory.create(gson))
+                                .build();
 
-                        }
+                        movieApi movieApi = retrofit.create(movieApi.class);
 
-                        @Override
-                        public void onFailure(retrofit2.Call<MovieSessionId> accessTokenCall, Throwable t) {
-                            Log.d("RETROFIT", "I FAILED");
-                            // handle failure
-                        }
-                    });
+                        retrofit2.Call<MovieSessionId> call = movieApi.getSessionId(api_key, request_Token);
+                        call.enqueue(new Callback<MovieSessionId>() {
+                            @Override
+                            public void onResponse(retrofit2.Call<MovieSessionId> accessTokenCall, Response<MovieSessionId> response) {
+                                Log.d("RETROFIT2", "I WORKED Session id");
+                                Log.d("RETROFIT2", response.toString());
+                                Log.d("RETROFIT2", response.body().getSession_id());
+                                session_id = response.body().getSession_id();
+                                ShPref = getSharedPreferences("Save", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor edit = ShPref.edit();
+                                edit.putString("SessionId", session_id);
+                                edit.apply();
+                                Log.d("SharedPref", ShPref.getString("SessionId", ""));
+                                Log.d("SharedPref", "Intentooo SP");
 
-                }
+                            }
+
+                            @Override
+                            public void onFailure(retrofit2.Call<MovieSessionId> accessTokenCall, Throwable t) {
+                                Log.d("RETROFIT", "I FAILED");
+                                // handle failure
+                            }
+                        });
+
+                    }}
 
                 @Override
                 public void onFailure(retrofit2.Call<MovieAccessTokenLogin> accessTokenCall, Throwable t) {
@@ -392,6 +399,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     // handle failure
                 }
             });
+
             return true;
         }
 

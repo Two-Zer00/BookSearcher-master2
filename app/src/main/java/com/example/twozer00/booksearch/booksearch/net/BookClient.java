@@ -84,6 +84,10 @@ public class BookClient {
         String url = getApiUrl("movie/");
         client.get(url +id_Movie+API_KEY, handler);
     }
+    public void getReviews(String id, String Media, JsonHttpResponseHandler handler){
+        String url = getApiUrl("");
+        client.get(url + Media +"/" + id+ "/reviews"+ API_KEY + UrlLenguage +lenguage, handler );
+    }
 
 
 }

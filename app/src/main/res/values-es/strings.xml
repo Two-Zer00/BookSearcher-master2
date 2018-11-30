@@ -31,14 +31,15 @@
     <string name="image_nosaved">No se pudo guardar la imagen</string>
     <string name="menu_login">Iniciar sesión</string>
 
-    <string name="title_activity_login">Sign in</string>
+    <string name="rate_error1">Necesitas inicar sesion para calificar</string>
+    <string name="title_activity_login">Entrar</string>
 
     <string name="menu_account">Cuenta</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Correo</string>
     <string name="prompt_password">Contraseña (opcional)</string>
-    <string name="action_sign_in">Iniciar sesión o registrarse</string>
+    <string name="action_sign_in">Iniciar sesión</string>
     <string name="action_sign_in_short">Iniciar sesión</string>
     <string name="error_invalid_email">Correo invalido</string>
     <string name="error_invalid_password">Contraseña demasiado corta</string>

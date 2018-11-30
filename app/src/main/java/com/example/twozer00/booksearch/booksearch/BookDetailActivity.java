@@ -1,46 +1,36 @@
 package com.example.twozer00.booksearch.booksearch;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
+import com.example.twozer00.booksearch.booksearch.adapters.ReviewAdapter;
 import com.example.twozer00.booksearch.booksearch.api.movieApi;
 import com.example.twozer00.booksearch.booksearch.models.Book;
 import com.example.twozer00.booksearch.booksearch.models.Rating;
+import com.example.twozer00.booksearch.booksearch.models.Review;
 import com.example.twozer00.booksearch.booksearch.net.BookClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,14 +41,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
@@ -70,7 +54,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.twozer00.booksearch.booksearch.BookListActivity.API_KEY;
-import static com.example.twozer00.booksearch.booksearch.LoginActivity.session_id;
 import static com.example.twozer00.booksearch.booksearch.net.BookClient.API_BASE_URL;
 
 public class BookDetailActivity extends AppCompatActivity {
@@ -93,7 +76,8 @@ public class BookDetailActivity extends AppCompatActivity {
     private TextView ActorsImage;
     private BookClient client;
     private ArrayList<String> id_Companieslogo=new ArrayList<String>();
-    private ListView lvCompanies;
+    private ListView lvreviews;
+    private ReviewAdapter reviewAdapter;
     //private ListView Recomendations;
 
 
@@ -115,57 +99,86 @@ public class BookDetailActivity extends AppCompatActivity {
         release_date = (TextView) findViewById(R.id.release_date);
         tvOverview = (TextView) findViewById(R.id.tvOverview);
         cast=(TextView) findViewById(R.id.cast);
+        ArrayList<Review> aReviews = new ArrayList<Review>();
+        reviewAdapter = new ReviewAdapter(this,aReviews);
+        lvreviews = (ListView)findViewById(R.id.LVreviews);
+        setListViewHeightBasedOnChildren(lvreviews);
+        lvreviews.setAdapter(reviewAdapter);
+
         Intent i= getIntent();
         Bundle b = i.getExtras();
+
+
         // Use the book to populate the data into our views
         final Book book = (Book) getIntent().getSerializableExtra(BookListActivity.BOOK_DETAIL_KEY);
+        /*String MediaType=book.getMedia_type();
+        Log.d("MediaType",MediaType);*/
         Log.d("BookCreate","Creado");
-        final Button button = findViewById(R.id.button1);
+
         final Button Send = findViewById(R.id.sendRate);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(BookDetailActivity.this, MovieReviewActivity.class);
-                //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
-                //intent1.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
-                startActivity(intent);
+
+        //Log.d("Mediatype1", book.getMedia_type());
+
+        if(book.media_type.equals(null)){
+            book.setMedia_type("movie");
+        }
+
+        if(ShPref.getString("SessionId","").equals("")){
+            stars.setIsIndicator(true);
+        }
+
+        if (book.getMedia_type().equals("person")){
+            Send.setVisibility(View.INVISIBLE);
+        }
+        else {
+
+
+            Send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(ShPref.getString("SessionId","").equals("")){
+                        Toast.makeText(getBaseContext(),getResources().getText(R.string.rate_error1),Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+
+                        Gson gson = new GsonBuilder()
+                                .setLenient()
+                                .create();
+
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(API_BASE_URL)
+                                .addConverterFactory(GsonConverterFactory.create(gson))
+                                .build();
+
+                        final movieApi movieApi = retrofit.create(movieApi.class);
+
+
+                        Call<Rating> call = movieApi.setRating(book.getMedia_type(), book.getId_Movie(), API_KEY, ShPref.getString("SessionId", ""), String.valueOf(stars.getRating() * 2));
+                        call.enqueue(new Callback<Rating>() {
+                            @Override
+                            public void onResponse(Call<Rating> rate, Response<Rating> response) {
+                                Log.d("RATING", "I WORKED");
+                                Log.d("RATING", response.toString());
+                                Log.d("RATING", String.valueOf(stars.getRating()));
+
+                                Toast.makeText(BookDetailActivity.this, "Tu califcación ha sido enviada", Toast.LENGTH_SHORT).show();
                             }
-        }        );
-        Send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Gson gson = new GsonBuilder()
-                        .setLenient()
-                        .create();
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(API_BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create(gson))
-                        .build();
-
-                movieApi movieApi = retrofit.create(movieApi.class);
-
-                Call<Rating> call = movieApi.setRating(book.getId_Movie(),API_KEY,ShPref.getString("SessionId",""),String.valueOf(stars.getRating()*2));
-                call.enqueue(new Callback<Rating>() {
-                    @Override
-                    public void onResponse(Call<Rating> rate, Response<Rating> response) {
-                        Log.d("RATING", "I WORKED");
-                        Log.d("RATING", response.toString());
-                        Log.d("RATING", String.valueOf(stars.getRating()));
-
-                        Toast.makeText(BookDetailActivity.this,"Tu califcación ha sido enviada",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Rating> rate, Throwable t) {
-                        Log.d("RATING", "I FAILED");
-                        // handle failure
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<Rating> rate, Throwable t) {
+                                Log.d("RATING", "I FAILED");
+                                // handle failure
+                            }
 
 
-            }
-        });
+                        });
+
+
+                    }}
+            });
+        }
+
 
         /*stars.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
 
@@ -206,6 +219,69 @@ public class BookDetailActivity extends AppCompatActivity {
         loadBook(book);
 
 
+    }
+
+    protected  void fetchReviewes (String id,String Media){
+        client = new BookClient();
+        Log.d("Review ", "Hola");
+        client.getReviews( id, Media, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess (int statusCode, Header[] headers, JSONObject response){
+                try {
+                    Log.d("Review" ,"Ejecutando");
+                    JSONArray docs = null;
+                    if (response != null){
+                        docs = response.getJSONArray("results");
+                        if (docs.length()!= 0){
+                            final ArrayList<Review> reviews = Review.fromJson(docs);
+                            Log.d("Review" ,String.valueOf(reviews.size()));
+
+                            reviewAdapter.clear();
+                            int i =1;
+                            for (Review review: reviews){
+                                Log.d("Rcount1" ,String.valueOf(i));
+                                i++;
+                                reviewAdapter.add(review);
+                            }
+                            reviewAdapter.notifyDataSetChanged();
+                        }
+                        else {
+                            Toast.makeText(getBaseContext(),getResources().getText(R.string.noresults),Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("Review" , String.valueOf(statusCode)+ "  "+ responseString);
+
+            }
+        });
+
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ReviewAdapter listAdapter = (ReviewAdapter) listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 
     // Populate data for the book
@@ -312,6 +388,8 @@ public class BookDetailActivity extends AppCompatActivity {
             }
 
         });
+        Log.d("REjecutando", "Si llegue");
+        fetchReviewes(book.getId_Movie(),book.getMedia_type());
     }
 
 

@@ -54,6 +54,7 @@
                 android:id="@+id/sendRate"
                 android:text="Send"
                 />
+
             <TextView
                 android:id="@+id/RateAvs"
                 android:layout_width="wrap_content"
@@ -175,7 +176,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="2000px"
                 android:orientation="vertical"
                 >
 
@@ -185,15 +186,15 @@
                     android:text="Reviews"
                     android:gravity="center"
                     />
-                <Button
+
+                <ListView
+                    android:id="@+id/LVreviews"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Reviews"
-                    android:id="@+id/button1"
-                    />
+                    android:layout_height="match_parent" />
+
             </LinearLayout>
         </LinearLayout>
 
     </ScrollView>
+
 </LinearLayout>

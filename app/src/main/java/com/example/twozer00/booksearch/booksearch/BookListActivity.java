@@ -48,7 +48,6 @@ import static com.example.twozer00.booksearch.booksearch.LoginActivity.session_i
 public class BookListActivity extends AppCompatActivity {
     public static final String BOOK_DETAIL_KEY = "movie";
     SharedPreferences ShPref;
-
     public static  String request_Token="";
     //public static final String BOOK_DETAIL_RECOMENDATION_KEY = "recommendations";
     //private String popularMovies=BookClient.;
@@ -61,6 +60,8 @@ public class BookListActivity extends AppCompatActivity {
     private static String API_BASE_URL = "https://api.themoviedb.org/3/";
     public static String API_KEY = "a36aa66b935c743a91a78e97f0e4bc9c";
     private TextView Actor;
+
+    //public static String MediaType;
 
 
 
@@ -81,10 +82,12 @@ public class BookListActivity extends AppCompatActivity {
         progress = (ProgressBar) findViewById(R.id.progress);
         Log.d("query",client.PopularMovies());
         PopularMovies();
+
         setupBookSelectedListener();
         //fetchBooks(client.getPopular(new JsonHttpResponseHandler()));
         new getMovieAccesToken().execute();
     }
+
 
 
     public void setupBookSelectedListener() {
@@ -95,6 +98,7 @@ public class BookListActivity extends AppCompatActivity {
                 Intent intent = new Intent(BookListActivity.this, BookDetailActivity.class);
                 //Intent intent1 = new Intent(BookListActivity.this, BookDetailActivity.class);
                 intent.putExtra(BOOK_DETAIL_KEY, bookAdapter.getItem(position));
+                //intent.putExtra("MediaType",MediaType);
                 //intent1.putExtra(BOOK_DETAIL_KEY, MovieAdapter.getItem(position));
                 startActivity(intent);
                 //startActivity(intent1);
@@ -127,7 +131,13 @@ public class BookListActivity extends AppCompatActivity {
                         bookAdapter.clear();
                         // Load model objects into the adapter
                         for (Book book : books) {
+
                             bookAdapter.add(book);
+
+
+
+                            /*MediaType=book.getMedia_type();
+                            Log.d("MediaType",MediaType);*/
                             //bookAdapter.
                             // add book through the adapter
                         }
@@ -153,8 +163,10 @@ public class BookListActivity extends AppCompatActivity {
         });
     }
 
+
     private void PopularMovies() {
         progress.setVisibility(ProgressBar.VISIBLE);
+
         BookListActivity.this.setTitle(getResources().getText(R.string.popular));
         client = new BookClient();
         client.getPopularMovies(new JsonHttpResponseHandler() {

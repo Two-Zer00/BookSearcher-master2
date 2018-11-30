@@ -15,11 +15,14 @@ import com.example.twozer00.booksearch.booksearch.models.AccountDetails;
 import com.example.twozer00.booksearch.booksearch.models.MovieAccessToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,15 +80,27 @@ public class AcountDetailsActivity extends Activity {
 
         movieApi movieApi = retrofit.create(movieApi.class);
 
-        Call<AccountDetails> call = movieApi.getAccountDetails(API_KEY,session_id);
+        Call<AccountDetails> call = movieApi.getAccountDetails(API_KEY,ShPref.getString("SessionId",""));
         call.enqueue(new Callback<AccountDetails>() {
             @Override
             public void onResponse(Call<AccountDetails> accessTokenCall, Response<AccountDetails> response) {
-                Log.d("RETROFIT", "I WORKED");
-                Log.d("RETROFIT", response.toString());
-                Log.d("RETROFIT", response.body().getName());
-                gravatar=gravatar+response.body().getHash();
+                Log.d("RETROFIT_LOGIN", "I WORKED");
+                Log.d("RETROFIT_LOGIN", response.toString());
+
+                Log.d("RETROFIT_LOGIN", response.body().toString());
+                Log.d("RETROFIT_LOGIN", response.body().getAvatar().toString());
+
+                JsonObject object = response.body().getAvatar();
+
+                JsonObject object1=response.body().getAvatar().getAsJsonObject("gravatar");
+
+                gravatar=gravatar+object1.get("hash").toString();
+
+                Log.d("RETROFIT_LOGINA",object1.get("hash").toString());
+
+
                 Picasso.get().load(Uri.parse(gravatar)).error(R.drawable.ic_nocover).into(avatar);
+
                 username.setText(response.body().getUsername());
                 name.setText(response.body().getName());
                 country.setText(response.body().getIso_3166_1());
@@ -95,7 +110,7 @@ public class AcountDetailsActivity extends Activity {
 
             @Override
             public void onFailure(Call<AccountDetails> accessTokenCall, Throwable t) {
-                Log.d("RETROFIT", "I FAILED");
+                Log.d("RETROFIT_LOGIN", "I FAILED"+t.getMessage());
                 // handle failure
             }
         });
