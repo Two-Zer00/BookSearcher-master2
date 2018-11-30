@@ -1,2 +1,2 @@
 # Maxii
-App for search movies, tv shows and actor also can make a review or rate using TheMovieDB.
+App for search movies, tv shows and actor also can rate using TheMovieDB.
