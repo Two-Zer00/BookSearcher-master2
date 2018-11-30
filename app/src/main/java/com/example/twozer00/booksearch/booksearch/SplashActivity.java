@@ -12,7 +12,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_splash);
         //new Handler().postDelayed(new Runnable() {
-        Intent intent = new Intent(this,GridMovies.class);
+        Intent intent = new Intent(this,BookListActivity.class);
         startActivity(intent);
         finish();
            // },4000);

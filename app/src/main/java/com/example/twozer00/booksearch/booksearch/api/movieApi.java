@@ -10,6 +10,7 @@ import com.example.twozer00.booksearch.booksearch.models.MovieAccessToken;
 import com.example.twozer00.booksearch.booksearch.models.MovieAccessTokenLogin;
 import com.example.twozer00.booksearch.booksearch.models.MovieSessionId;
 import com.example.twozer00.booksearch.booksearch.models.Rating;
+import com.example.twozer00.booksearch.booksearch.models.SearchMedia;
 import com.example.twozer00.booksearch.booksearch.models.movieModel;
 
 import java.util.List;
@@ -31,8 +32,12 @@ public interface movieApi {
     Call<MovieAccessToken> getAccesToken(@Query("api_key") String api_key);
 
 
-    @GET("discover/movie?sort_by=popularity.desc")
-    Call<Element> getPopular(@Query("api_key") String api_key);
+    @GET("movie/popular")
+    Call<Element> getPopular(@Query("api_key") String api_key,@Query("page") int page);
+
+
+    @GET("search/multi")
+    Call<SearchMedia> getSearch(@Query("api_key") String api_key, @Query("query") String query, @Query("page") int page);
 
     @FormUrlEncoded
     @POST("authentication/token/validate_with_login?")

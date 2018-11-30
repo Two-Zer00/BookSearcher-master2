@@ -7,25 +7,28 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.twozer00.booksearch.booksearch.BookDetailActivity;
 import com.example.twozer00.booksearch.booksearch.GridMovies;
 import com.example.twozer00.booksearch.booksearch.R;
 import com.example.twozer00.booksearch.booksearch.models.Book;
 import com.example.twozer00.booksearch.booksearch.models.Element;
+import com.example.twozer00.booksearch.booksearch.models.ElementForm;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
-    private ArrayList<Book> dataset;
+    private ArrayList<ElementForm> dataset;
     private Context context;
-    private Book el;
+    private ElementForm el;
 
     public GridAdapter(Context context){
         this.context = context;
@@ -46,7 +49,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         el = dataset.get(i);
         //viewHolder.nombreTextView.setText(el.getName());
-        Picasso.get().load(Uri.parse(el.getPoster_path())).error(R.drawable.ic_nocover).into(viewHolder.Poster);
+        Log.d("Image8",el.getCoverUrl());
+        Picasso.get().load(Uri.parse(el.getCoverUrl())).error(R.drawable.ic_nocover).into(viewHolder.Poster);
     }
 
     @Override
@@ -54,7 +58,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         return dataset.size();
     }
 
-    public void addElemList(ArrayList<Book> booklist){
+    public void addElemList(ArrayList<ElementForm> booklist){
         dataset.addAll(booklist);
         notifyDataSetChanged();
     }
@@ -75,6 +79,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         @Override
         public void onClick(View view) {
             Poster = (ImageView) itemView.findViewById(R.id.poster);
+            Log.d("Image1","load" + Poster.toString());
             el = dataset.get(getAdapterPosition());
             switch (view.getId()) {
                 case R.id.items:
@@ -82,7 +87,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                     //Bitmap bitmap = drawableToBitmap(fotoImageView.getDrawable());
                     //ByteArrayOutputStream bs = new ByteArrayOutputStream();
                     //bitmap.compress(Bitmap.CompressFormat.PNG, 100, bs);
-                    i.putExtra("ID_ELEMENT", el.getId_Movie());
+                    i.putExtra("ID_ELEMENT", el.getId());
                     //i.putExtra("POKEMON_NAME", p.getName());
                     //i.putExtra("POKEMON_IMAGE", bs.toByteArray());
                     view.getContext().startActivity(i);

@@ -38,11 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
-import com.example.twozer00.booksearch.booksearch.adapters.MovieRecomendationAdapter;
 import com.example.twozer00.booksearch.booksearch.api.movieApi;
 import com.example.twozer00.booksearch.booksearch.models.Book;
-import com.example.twozer00.booksearch.booksearch.models.DeleteSession;
-import com.example.twozer00.booksearch.booksearch.models.MovieRecomendation;
 import com.example.twozer00.booksearch.booksearch.models.Rating;
 import com.example.twozer00.booksearch.booksearch.net.BookClient;
 import com.google.gson.Gson;
@@ -98,7 +95,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private ArrayList<String> id_Companieslogo=new ArrayList<String>();
     private ListView lvCompanies;
     //private ListView Recomendations;
-    //private MovieRecomendationAdapter MovieAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +115,8 @@ public class BookDetailActivity extends AppCompatActivity {
         release_date = (TextView) findViewById(R.id.release_date);
         tvOverview = (TextView) findViewById(R.id.tvOverview);
         cast=(TextView) findViewById(R.id.cast);
+        Intent i= getIntent();
+        Bundle b = i.getExtras();
         // Use the book to populate the data into our views
         final Book book = (Book) getIntent().getSerializableExtra(BookListActivity.BOOK_DETAIL_KEY);
         Log.d("BookCreate","Creado");

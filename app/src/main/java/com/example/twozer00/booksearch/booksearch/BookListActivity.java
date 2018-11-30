@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Movie;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,22 +17,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.twozer00.booksearch.booksearch.adapters.BookAdapter;
-import com.example.twozer00.booksearch.booksearch.adapters.MovieCompaniesAdapter;
-import com.example.twozer00.booksearch.booksearch.adapters.MovieRecomendationAdapter;
-import com.example.twozer00.booksearch.booksearch.adapters.PopularMoviesAdapter;
 import com.example.twozer00.booksearch.booksearch.api.movieApi;
 import com.example.twozer00.booksearch.booksearch.models.Book;
 import com.example.twozer00.booksearch.booksearch.models.DeleteSession;
 import com.example.twozer00.booksearch.booksearch.models.MovieAccessToken;
-import com.example.twozer00.booksearch.booksearch.models.MovieRecomendation;
-import com.example.twozer00.booksearch.booksearch.models.PopularMovies;
 import com.example.twozer00.booksearch.booksearch.net.BookClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -64,11 +56,11 @@ public class BookListActivity extends AppCompatActivity {
     private ListView lvBooks;
     //private ListView PopularMovie;
     private BookAdapter bookAdapter;
-    private PopularMoviesAdapter MovieAdapter;
     private BookClient client;
     private ProgressBar progress;
     private static String API_BASE_URL = "https://api.themoviedb.org/3/";
     public static String API_KEY = "a36aa66b935c743a91a78e97f0e4bc9c";
+    private TextView Actor;
 
 
 
@@ -80,6 +72,7 @@ public class BookListActivity extends AppCompatActivity {
         Log.d("SharedPref",ShPref.getString("SessionId",""));
         setContentView(R.layout.activity_book_list);
         lvBooks = (ListView) findViewById(R.id.lvBooks);
+        Actor=(TextView) findViewById(R.id.releasedate);
         //PopularMovie = (ListView) findViewById(R.id.PopularMovie);
         ArrayList<Book> aBooks = new ArrayList<Book>();
         bookAdapter = new BookAdapter(this, aBooks);
@@ -128,7 +121,8 @@ public class BookListActivity extends AppCompatActivity {
                         if(docs.length()!=0){
                         // Parse json array into array of model objects
                         final ArrayList<Book> books = Book.fromJson(docs);
-                        Log.d("Is Tv",  String.valueOf(books.size()));
+                        //Toast.makeText(getApplicationContext(),docs.length(),Toast.LENGTH_SHORT).show();
+                        Log.d("IsTv",  String.valueOf(books.size()));
                         // Remove all books from the adapter
                         bookAdapter.clear();
                         // Load model objects into the adapter
@@ -138,13 +132,15 @@ public class BookListActivity extends AppCompatActivity {
                             // add book through the adapter
                         }
                         bookAdapter.notifyDataSetChanged();
+
+                            //Toast.makeText(getApplicationContext(),books.size(),Toast.LENGTH_SHORT).show();
                         }
                         else{
                             toast1=Toast.makeText(getBaseContext(),getResources().getText(R.string.noresults),Toast.LENGTH_LONG);
                             toast1.show();
                         }
                     }
-                    toast1.show();
+                    //toast1.show();
                 } catch (JSONException e) {
                     // Invalid JSON format, show appropriate error.
                     e.printStackTrace();
@@ -176,6 +172,7 @@ public class BookListActivity extends AppCompatActivity {
                         docs = response.getJSONArray("results");
                         // Parse json array into array of model objects
                         final ArrayList<Book> books = Book.fromJson(docs);
+                        //Toast.makeText(getApplicationContext(),docs.length(),Toast.LENGTH_SHORT).show();
                         // Remove all books from the adapter
                         bookAdapter.clear();
                         // Load model objects into the adapter
@@ -184,8 +181,10 @@ public class BookListActivity extends AppCompatActivity {
                             // add book through the adapter
                         }
                         bookAdapter.notifyDataSetChanged();
+
+                        //Toast.makeText(getApplicationContext(),books.size(),Toast.LENGTH_SHORT).show();
                     }
-                    //toast1.show();
+                    toast1.show();
                 } catch (JSONException e) {
                     // Invalid JSON format, show appropriate error.
                     e.printStackTrace();

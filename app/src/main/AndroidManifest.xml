@@ -29,7 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PopularMoviesActivity" />
         <activity
             android:name=".ScrollingActivity"
             android:label="@string/title_activity_scrolling"
@@ -43,7 +42,8 @@
         <activity
             android:name=".MovieReviewActivity"
             android:label="@string/title_activity_acount_details" />
-        <activity android:name=".GridMovies"></activity>
+        <activity android:name=".GridMovies" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

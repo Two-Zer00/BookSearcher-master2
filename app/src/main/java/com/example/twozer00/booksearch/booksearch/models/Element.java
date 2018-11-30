@@ -4,17 +4,22 @@ import java.util.ArrayList;
 
 public class Element {
 
-    private ArrayList<Book> results;
+    private ArrayList<ElementForm> results;
+    private int total_results;
 
-    public ArrayList<Book> getResults() {
+    public int getTotal_results() {
+        return total_results;
+    }
+
+    public void setTotal_results(int total_results) {
+        this.total_results = total_results;
+    }
+
+    public ArrayList<ElementForm> getResults() {
         return results;
     }
 
-    public void setResults(ArrayList<Book> results) {
+    public void setResults(ArrayList<ElementForm> results) {
         this.results = results;
     }
-/*public String getCoverUrl() {
-        return "https://image.tmdb.org/t/p/w185/" + poster_path;
-    }*/
-
 }

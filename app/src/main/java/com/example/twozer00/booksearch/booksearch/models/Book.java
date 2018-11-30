@@ -57,8 +57,9 @@ public class Book implements Serializable{
     public static Book fromJson(JSONObject jsonObject) {
         Book book = new Book();
         try {
-            if(jsonObject.getString("media_type").equals("movie")){
 
+            if(jsonObject.getString("media_type").equals("movie")){
+                Log.d("MOVIE_MEDIATYPE","MOVIE");
                 book.id_Movie=jsonObject.getString("id");
                 if (jsonObject.has("poster_path"))  {
                     book.imagecode = jsonObject.getString("poster_path");
@@ -74,11 +75,13 @@ public class Book implements Serializable{
                 book.overview = jsonObject.getString("overview");
                 book.voteAvs= jsonObject.getString("vote_average");
                 book.releaseDate=jsonObject.getString("release_date");
+
+
+                Log.d("MOVIE_MEDIATYPE","IsMovie"+book.toString());
+                //Log.d("MOVIE_MEDIATYPE",""+book.toString());
             }
             else if(jsonObject.getString("media_type").equals("tv")){
-                Log.d("Is Tv", "True");
-
-
+                Log.d("TV_MEDIATYPE","TV");
                 book.id_Movie=jsonObject.getString("id");
                 if (jsonObject.has("poster_path"))  {
                     book.imagecode = jsonObject.getString("poster_path");
@@ -90,14 +93,15 @@ public class Book implements Serializable{
                 if (jsonObject.has("backdrop_path")){
                     book.bgimagecode=jsonObject.getString("backdrop_path");
                 }
-                book.bgimagecode = "/dHYvIgsax8ZFgkz1OslE4V6Pnf5.jpg";
+                //book.imagecode = jsonObject.getString("poster_path");
                 book.title = jsonObject.getString("name");
                 book.overview = jsonObject.getString("overview");
                 book.voteAvs= jsonObject.getString("vote_average");
                 book.releaseDate=jsonObject.getString("first_air_date");
-                Log.d("Is Tv", book.toString());
-            } else {
-                Log.d("Is Tv", "ELSED");
+                Log.d("TV_MEDIATYPE", "IsTV"+book.toString());
+                //Log.d("TV_MEDIATYPE",""+book.toString());
+            } else if (jsonObject.getString("media_type").equals("person")) {
+                Log.d("ACTOR_MEDIATYPE","ACTOR");
                 book.id_Movie=jsonObject.getString("id");
                 if (jsonObject.has("profile_path"))  {
                     book.imagecode = jsonObject.getString("profile_path");
@@ -125,12 +129,59 @@ public class Book implements Serializable{
 
                     }
 
-                    book.overview =TextUtils.join("\n", companies);
+                    book.overview =TextUtils.join(", ", companies);
                 }
+                book.voteAvs= jsonObject.getString("popularity");
+
+                book.releaseDate="Actor";
+                Log.d("ACTOR_MEDIATYPE","IsActor"+book.toString());
+            }
+            else{
+                Log.d("mainpage_MEDIATYPE","in");
+
+                book.id_Movie=jsonObject.getString("id");
+                if (jsonObject.has("poster_path"))  {
+                book.imagecode = jsonObject.getString("poster_path") ;
+                } else if(jsonObject.has("poster_path")) {
+                final JSONArray ids = jsonObject.getJSONArray("poster_path");
+                book.imagecode = ids.getString(0);
+                }
+
+                if (jsonObject.has("backdrop_path")){
+                book.bgimagecode=jsonObject.getString("backdrop_path");
+                }
+                book.title = jsonObject.getString("title");
+                book.overview = jsonObject.getString("overview");
                 book.voteAvs= jsonObject.getString("vote_average");
-                book.releaseDate=jsonObject.getString("release_date");}
+                book.releaseDate=jsonObject.getString("release_date");
 
 
+                Log.d("Movie_Book","Is movie"+book.toString());
+
+            }
+
+/*
+            Log.d("MOVIE_MEDIATYPE",""+book.toString());
+
+            book.id_Movie=jsonObject.getString("id");
+            //if (jsonObject.has("poster_path"))  {
+            book.imagecode = "/uyJgTzAsp3Za2TaPiZt2yaKYRIR.jpg" ;//jsonObject.getString("poster_path");
+            //} else if(jsonObject.has("poster_path")) {
+            //final JSONArray ids = jsonObject.getJSONArray("poster_path");
+            //book.imagecode = ids.getString(0);
+            //}
+
+            //if (jsonObject.has("backdrop_path")){
+            book.bgimagecode=jsonObject.getString("backdrop_path");
+            //}
+            book.title = jsonObject.getString("title");
+            book.overview = jsonObject.getString("overview");
+            book.voteAvs= jsonObject.getString("vote_average");
+            book.releaseDate=jsonObject.getString("release_date");
+
+
+            Log.d("Movie_Book","Is movie"+book.toString());
+*/
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -159,17 +210,9 @@ public class Book implements Serializable{
         return books;
     }
 
-    public String getPoster_path() {
-        return poster_path;
-    }
-
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
-    }
-
     @Override
     public String toString() {
-        return "ID" + this.id_Movie + "title: " + this.title + "posterPath: " + this.imagecode + "Overview: " + this.overview + "voteAvg: " + this.voteAvs +
+        return "IDa" + this.id_Movie + "title: " + this.title + "posterPath: " + this.imagecode + "Overview: " + this.overview + "voteAvg: " + this.voteAvs +
                 "releaseDate: " + this.releaseDate + "bkgImage: " + this.bgimagecode;
     }
 }
